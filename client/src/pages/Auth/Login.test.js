@@ -164,4 +164,19 @@ describe('Login Component', () => {
         await waitFor(() => expect(axios.post).toHaveBeenCalled());
         expect(toast.error).toHaveBeenCalledWith('Invalid email or password');
     });
+
+    it('should navigate to forgot password page when clicking Forgot Password button', () => {
+        const { getByText } = render(
+            <MemoryRouter initialEntries={['/login']}>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/forgot-password" element={<div>Forgot Password Page</div>} />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        fireEvent.click(getByText('Forgot Password'));
+
+        expect(getByText('Forgot Password Page')).toBeInTheDocument();
+    });
 });
