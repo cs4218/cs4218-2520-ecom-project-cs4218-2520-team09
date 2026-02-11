@@ -96,7 +96,8 @@ describe('Register Component', () => {
     expect(toast.error).toHaveBeenCalledWith('Something went wrong');
   });
 
-  it('should display server error message when success is false', async () => {
+  // Zhu Shiqi, A0271719X
+  it('should display server error message when not successful', async () => {
     axios.post.mockResolvedValueOnce({ data: { success: false, message: 'Email already registered' } });
     axios.get.mockResolvedValueOnce({ data: { category: [] } });
 

@@ -141,6 +141,7 @@ describe('Login Component', () => {
         expect(toast.error).toHaveBeenCalledWith('Something went wrong');
     });
 
+    // Zhu Shiqi, A0271719X
     it('should display error message when login response is not successful', async () => {
         axios.post.mockResolvedValueOnce({
             data: {
@@ -164,7 +165,8 @@ describe('Login Component', () => {
         await waitFor(() => expect(axios.post).toHaveBeenCalled());
         expect(toast.error).toHaveBeenCalledWith('Invalid email or password');
     });
-
+    
+    // Zhu Shiqi, A0271719X
     it('should navigate to forgot password page when clicking Forgot Password button', () => {
         const { getByText } = render(
             <MemoryRouter initialEntries={['/login']}>
