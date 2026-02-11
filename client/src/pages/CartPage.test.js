@@ -4,6 +4,9 @@ import axios from 'axios';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import CartPage from "./CartPage";
 
+// Written by
+// Name: Chan Cheuk Hong John
+// Student No: A0253435H
 
 // Mocking dependenies
 jest.mock("axios");

@@ -2,6 +2,10 @@ import React from 'react';
 import { renderHook, act } from "@testing-library/react";
 import { CartProvider, useCart } from "./cart";
 
+// Written by
+// Name: Chan Cheuk Hong John
+// Student No: A0253435H
+
 // Mock localStorage
 Object.defineProperty(window, "localStorage", {
   value: {
