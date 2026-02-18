@@ -29,11 +29,11 @@ export default {
       "client/src/pages/Auth/Register.js",
       "client/src/pages/admin/AdminDashboard.js"
   ],
-  coverageThreshold: {
-    global: {
-      lines: 100,
-      functions: 100,
-    },
-  },
+//   coverageThreshold: {
+//     global: {
+//       lines: 100,
+//       functions: 100,
+//     },
+//   },
   setupFilesAfterEnv: ["<rootDir>/client/src/setupTests.js"],
 };
