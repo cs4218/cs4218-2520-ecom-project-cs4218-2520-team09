@@ -173,7 +173,7 @@ describe('CartPage', () => {
         })
     });
 
-    it('should function normally with duplicate items', () => {
+    it('should remove item properly with duplicate items', () => {
         axios.get.mockResolvedValue({ data: { clientToken: "token" } });
 
         // Setup mock data with duplicate items

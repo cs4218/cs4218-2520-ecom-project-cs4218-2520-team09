@@ -5,8 +5,14 @@ const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    let existingCartItem = localStorage.getItem("cart");
-    if (existingCartItem) setCart(JSON.parse(existingCartItem));
+    // Ensure that it handles error gracefully
+    try {
+        let existingCartItem = localStorage.getItem("cart");
+        if (existingCartItem) setCart(JSON.parse(existingCartItem));
+    } catch (err) {
+        console.log("localStorage corrupted");
+        setCart([]); // Default empty cart
+    }
   }, []);
 
   return (
