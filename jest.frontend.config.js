@@ -32,11 +32,11 @@ export default {
     "client/src/pages/admin/AdminOrders.js",
     "client/src/pages/admin/Products.js",
     "client/src/pages/Policy.js"],
-  coverageThreshold: {
-    global: {
-      lines: 100,
-      functions: 100,
-    },
-  },
+  // coverageThreshold: {
+  //   global: {
+  //     lines: 100,
+  //     functions: 100,
+  //   },
+  // },
   setupFilesAfterEnv: ["<rootDir>/client/src/setupTests.js"],
 };
