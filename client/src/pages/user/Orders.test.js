@@ -165,5 +165,5 @@ describe('CartPage', () => {
         await waitFor(() => {
           expect(axios.get).not.toHaveBeenCalled();
         });
-      });
+    });
 })

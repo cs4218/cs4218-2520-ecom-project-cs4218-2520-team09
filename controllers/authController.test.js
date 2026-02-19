@@ -549,6 +549,7 @@ describe('updateProfileController', () => {
         };
     });
 
+    // Password length == 6
     it('should successfully update password if password is valid', async () => {
         // Mock old and new user data
         req.user._id = "test";
@@ -594,11 +595,58 @@ describe('updateProfileController', () => {
         });
     })
 
+    // Password length > 6 (== 7)
+    it('should successfully update password if password is long and valid', async () => {
+        // Mock old and new user data
+        req.user._id = "test";
+        req.body = { 
+            password: "7654321",
+        }
+
+        const existingUser = {
+            name: "Old",
+            password: "66666666",
+            phone: "88888888",
+            address: "Old"
+        }
+
+        const newUser = {
+            name: "Old",
+            password: "hashed",
+            phone: "88888888",
+            address: "Old"
+        }
+
+        // Mock fn calls
+        userModel.findById.mockResolvedValue(existingUser);
+        hashPassword.mockResolvedValue("hashed");
+        userModel.findByIdAndUpdate.mockResolvedValue(newUser);
+
+        // Call the controller
+        await updateProfileController(req, res);
+
+        // Expect that functions are called with correct values 
+        expect(hashPassword).toHaveBeenCalledWith("7654321");
+        expect(userModel.findByIdAndUpdate).toHaveBeenCalledWith("test",
+            newUser,
+            { new: true }
+        );
+
+        // Expect that response status and message is correct
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith({
+          success: true,
+          message: "Profile Updated Successfully",
+          updatedUser: newUser,
+        });
+    })
+
+    // Password length < 6 (== 5)
     it('should fail to update if password is too short', async () => {
         // Mock old and new user data
         req.user._id = "test";
         req.body = { 
-            password: "1",
+            password: "12345",
         }
 
         const existingUser = {
