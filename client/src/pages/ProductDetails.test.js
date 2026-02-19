@@ -5,6 +5,10 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import ProductDetails from "./ProductDetails";
 
+// Written by
+// Name: Chan Cheuk Hong John
+// Student No: A0253435H
+
 // Mock dependencies
 jest.mock("axios");
 jest.mock('../hooks/useCategory.js')
