@@ -5,6 +5,9 @@ import { isAdmin, requireSignIn } from "./authMiddleware.js";
 jest.mock("jsonwebtoken");
 jest.mock("../models/userModel.js");
 
+// Written by Wu Jinhan
+// Student No: A0266075Y
+
 // Unit tests for middlewares/authMiddleware.js
 describe("authMiddleware", () => {
   beforeEach(() => {
@@ -65,7 +68,7 @@ describe("authMiddleware", () => {
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.send).toHaveBeenCalledWith({
         success: false,
-        message: "UnAuthorized Access",
+        message: "Unauthorized Access",
       });
       expect(next).not.toHaveBeenCalled();
     });
