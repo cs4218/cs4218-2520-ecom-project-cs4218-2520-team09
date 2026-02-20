@@ -6,13 +6,27 @@ import AdminOrders from "./AdminOrders";
 import { useAuth } from "../../context/auth";
 
 jest.mock("axios");
+
 jest.mock("../../context/auth", () => ({
+  __esModule: true,
   useAuth: jest.fn(),
 }));
-jest.mock("../../components/Layout", () => ({ children }) => <div>{children}</div>);
-jest.mock("../../components/AdminMenu", () => () => <div>AdminMenu</div>);
-jest.mock("moment", () => () => ({
-  fromNow: () => "a day ago",
+
+jest.mock("../../components/Layout", () => ({
+  __esModule: true,
+  default: ({ children }) => <div data-testid="layout">{children}</div>,
+}));
+
+jest.mock("../../components/AdminMenu", () => ({
+  __esModule: true,
+  default: () => <div data-testid="admin-menu">AdminMenu</div>,
+}));
+
+jest.mock("moment", () => ({
+  __esModule: true,
+  default: () => ({
+    fromNow: () => "a day ago",
+  }),
 }));
 
 jest.mock("antd", () => {
@@ -26,11 +40,26 @@ jest.mock("antd", () => {
     </select>
   );
   Select.Option = ({ children, value }) => <option value={value}>{children}</option>;
-  return { Select, Option: Select.Option };
+  return { 
+    __esModule: true,
+    Select, 
+    Option: Select.Option 
+  };
 });
 
 describe("AdminOrders Component", () => {
   const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+  const originalConsoleError = console.error;
+  let consoleErrorSpy;
+
+  beforeAll(() => {
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation((...args) => {
+      if (typeof args[0] === "string" && args[0].includes('unique "key" prop')) {
+        return;
+      }
+      originalConsoleError(...args);
+    });
+  });
 
   const mockOrders = [
     {
@@ -64,36 +93,44 @@ describe("AdminOrders Component", () => {
 
   afterAll(() => {
     consoleSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
+
   // Liu, Yiwei, A0332922J
   test("Given valid auth token, When component mounts, Then it fetches and renders orders successfully", async () => {
     useAuth.mockReturnValue([{ token: "valid-token" }, jest.fn()]);
     axios.get.mockResolvedValueOnce({ data: mockOrders });
     render(<AdminOrders />);
+    
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/all-orders");
     });
-    expect(screen.getByText("User A")).toBeInTheDocument();
+    
+    expect(await screen.findByText("User A")).toBeInTheDocument();
     expect(screen.getByText("Success")).toBeInTheDocument();
     expect(screen.getByText("Failed")).toBeInTheDocument();
     expect(screen.getByText("Test Product")).toBeInTheDocument();
   });
+
   // Liu, Yiwei, A0332922J
   test("Given no auth token, When component mounts, Then it does not fetch orders", () => {
     useAuth.mockReturnValue([{}, jest.fn()]);
     render(<AdminOrders />);
     expect(axios.get).not.toHaveBeenCalled();
   });
+
   // Liu, Yiwei, A0332922J
   test("Given valid auth token, When fetching orders fails, Then it logs the error", async () => {
     useAuth.mockReturnValue([{ token: "valid-token" }, jest.fn()]);
     const error = new Error("Network Error");
     axios.get.mockRejectedValueOnce(error);
     render(<AdminOrders />);
+    
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(error);
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Given rendered orders, When admin changes order status successfully, Then it calls PUT api and refetches orders", async () => {
     useAuth.mockReturnValue([{ token: "valid-token" }, jest.fn()]);
@@ -101,11 +138,12 @@ describe("AdminOrders Component", () => {
     axios.put.mockResolvedValueOnce({ data: { success: true } });
     
     render(<AdminOrders />);
-    await waitFor(() => {
-      expect(screen.getByText("User A")).toBeInTheDocument();
-    });
+    
+    expect(await screen.findByText("User A")).toBeInTheDocument();
+    
     const selects = screen.getAllByTestId("mock-select");
     fireEvent.change(selects[0], { target: { value: "Shipped" } });
+    
     await waitFor(() => {
       expect(axios.put).toHaveBeenCalledWith(`/api/v1/auth/order-status/order1`, {
         status: "Shipped",
@@ -113,6 +151,7 @@ describe("AdminOrders Component", () => {
       expect(axios.get).toHaveBeenCalledTimes(2); 
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Given rendered orders, When changing order status fails, Then it logs the error", async () => {
     useAuth.mockReturnValue([{ token: "valid-token" }, jest.fn()]);
@@ -122,11 +161,11 @@ describe("AdminOrders Component", () => {
     
     render(<AdminOrders />);
     
-    await waitFor(() => {
-      expect(screen.getByText("User A")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("User A")).toBeInTheDocument();
+    
     const selects = screen.getAllByTestId("mock-select");
     fireEvent.change(selects[0], { target: { value: "Shipped" } });
+    
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(error);
     });
