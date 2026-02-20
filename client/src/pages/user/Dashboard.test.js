@@ -19,6 +19,7 @@ jest.mock('../../components/UserMenu', () => () => <div>UserMenu</div>);
 
 import { useAuth } from '../../context/auth';
 
+// Zhu Shiqi, A0271719X
 describe('Dashboard Component', () => {
     beforeEach(() => {
         jest.clearAllMocks();
