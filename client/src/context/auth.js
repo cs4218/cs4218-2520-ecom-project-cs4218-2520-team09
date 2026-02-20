@@ -18,8 +18,8 @@ const AuthProvider = ({ children }) => {
         const parseData = JSON.parse(data);
         setAuth({
             ...auth,
-            user: parsedData.user,
-            token: parsedData.token,
+            user: parseData.user,
+            token: parseData.token,
         });
        }
        //eslint-disable-next-line
