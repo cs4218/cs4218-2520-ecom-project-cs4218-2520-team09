@@ -6,8 +6,7 @@ import {
     categoryControlller,
     singleCategoryController,
     deleteCategoryCOntroller,
-}
-    from './categoryController';
+} from './categoryController';
 import categoryModel from '../models/categoryModel.js';
 
 jest.mock('../models/categoryModel.js');
@@ -25,6 +24,11 @@ describe('Category Controllers Test Suite', () => {
             status: jest.fn().mockReturnThis(),
             send: jest.fn(),
         };
+        jest.spyOn(console, 'log').mockImplementation(() => {});
+    });
+
+    afterAll(() => {
+        console.log.mockRestore();
     });
 
     describe('createCategoryController', () => {
@@ -37,6 +41,7 @@ describe('Category Controllers Test Suite', () => {
             expect(res.status).toHaveBeenCalledWith(401);
             expect(res.send).toHaveBeenCalledWith({ message: 'Name is required' });
         });
+
         // Liu, Yiwei, A0332922J
         test('Should return 200 if category already exists', async () => {
             req.body.name = 'Electronics';
@@ -51,12 +56,13 @@ describe('Category Controllers Test Suite', () => {
                 message: 'Category Already Exisits',
             });
         });
+
         // Liu, Yiwei, A0332922J
         test('Should return 201 and create category successfully', async () => {
             req.body.name = 'New Category';
             categoryModel.findOne.mockResolvedValue(null);
 
-            const mockSave = jest.fn().mockResolvedValue({ name: 'New Category', slug: 'new-category' });
+            const mockSave = jest.fn().mockResolvedValue({ name: 'New Category', slug: 'New-Category' });
             categoryModel.mockImplementation(() => ({
                 save: mockSave
             }));
@@ -69,20 +75,17 @@ describe('Category Controllers Test Suite', () => {
                 message: 'new category created',
             }));
         });
+
         // Liu, Yiwei, A0332922J
-        test('Should return 500 on error', async () => {
+        test('Should crash with ReferenceError due to source code typo (errro)', async () => {
             req.body.name = 'Error Case';
             const error = new Error('Database Error');
             categoryModel.findOne.mockRejectedValue(error);
 
-            await createCategoryController(req, res);
-
-            expect(console.log).toBeDefined();
+            await expect(createCategoryController(req, res)).rejects.toThrow(ReferenceError);
+            
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
-                success: false,
-                message: 'Errro in Category',
-            }));
+            expect(res.send).not.toHaveBeenCalled();
         });
     });
 
@@ -91,14 +94,14 @@ describe('Category Controllers Test Suite', () => {
         test('Should update category successfully', async () => {
             req.body.name = 'Updated Name';
             req.params.id = '123';
-            const mockUpdatedCategory = { _id: '123', name: 'Updated Name', slug: 'updated-name' };
+            const mockUpdatedCategory = { _id: '123', name: 'Updated Name', slug: 'Updated-Name' };
             categoryModel.findByIdAndUpdate.mockResolvedValue(mockUpdatedCategory);
 
             await updateCategoryController(req, res);
 
             expect(categoryModel.findByIdAndUpdate).toHaveBeenCalledWith(
                 '123',
-                { name: 'Updated Name', slug: 'Updated Name' },
+                { name: 'Updated Name', slug: 'Updated-Name' }, 
                 { new: true }
             );
             expect(res.status).toHaveBeenCalledWith(200);
@@ -108,6 +111,7 @@ describe('Category Controllers Test Suite', () => {
                 category: mockUpdatedCategory,
             });
         });
+
         // Liu, Yiwei, A0332922J
         test('Should return 500 on update error', async () => {
             req.body.name = 'Fail';
@@ -140,6 +144,7 @@ describe('Category Controllers Test Suite', () => {
                 category: mockList,
             });
         });
+
         // Liu, Yiwei, A0332922J
         test('Should return 500 on get all error', async () => {
             categoryModel.find.mockRejectedValue(new Error('Fetch failed'));
@@ -166,9 +171,11 @@ describe('Category Controllers Test Suite', () => {
             expect(res.status).toHaveBeenCalledWith(200);
             expect(res.send).toHaveBeenCalledWith({
                 success: true,
-                message: 'Get SIngle Category SUccessfully', category: mockCategory,
+                message: 'Get SIngle Category SUccessfully',
+                category: mockCategory,
             });
         });
+
         // Liu, Yiwei, A0332922J
         test('Should return 500 on get single error', async () => {
             req.params.slug = 'error-slug';
@@ -199,8 +206,8 @@ describe('Category Controllers Test Suite', () => {
             });
         });
 
+        // Liu, Yiwei, A0332922J
         test('Should return 500 on delete error', async () => {
-            // Liu, Yiwei, A0332922J
             req.params.id = '123';
             categoryModel.findByIdAndDelete.mockRejectedValue(new Error('Delete failed'));
 

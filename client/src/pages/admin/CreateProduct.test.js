@@ -16,7 +16,7 @@ jest.mock("react-router-dom", () => ({
 }));
 
 jest.mock("antd", () => {
-  const MockSelect = ({ children, onChange, placeholder, ...props }) => {
+  const MockSelect = ({ children, onChange, placeholder, bordered, showSearch, ...props }) => {
     return (
       <select
         data-testid={placeholder || "mock-select"}
@@ -49,6 +49,7 @@ describe("CreateProduct Component Test", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
   // Liu, Yiwei, A0332922J
   test("should fetch and display categories on mount", async () => {
     const mockCategories = {
@@ -68,6 +69,7 @@ describe("CreateProduct Component Test", () => {
     expect(screen.getByText("Electronics")).toBeInTheDocument();
     expect(screen.getByText("Books")).toBeInTheDocument();
   });
+
   // Liu, Yiwei, A0332922J
   test("should handle error when fetching categories fails", async () => {
     const error = new Error("Network Error");
@@ -85,6 +87,7 @@ describe("CreateProduct Component Test", () => {
 
     consoleSpy.mockRestore();
   });
+
   // Liu, Yiwei, A0332922J
   test("should handle form inputs and create product successfully (Else Branch Logic)", async () => {
     const mockCategories = {
@@ -137,6 +140,7 @@ describe("CreateProduct Component Test", () => {
 
     expect(screen.getByAltText("product_photo")).toBeInTheDocument();
   });
+
   // Liu, Yiwei, A0332922J
   test("should handle creation failure response (If Branch Logic)", async () => {
     axios.get.mockResolvedValue({ data: { category: [] } });
@@ -152,6 +156,7 @@ describe("CreateProduct Component Test", () => {
     expect(toast.error).toHaveBeenCalledWith("Database Error");
     expect(mockNavigate).not.toHaveBeenCalled();
   });
+
   // Liu, Yiwei, A0332922J
   test("should catch runtime errors during creation", async () => {
     axios.get.mockResolvedValue({ data: { category: [] } });

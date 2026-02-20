@@ -42,6 +42,21 @@ describe("CreateCategory Final 100% Coverage", () => {
     { _id: "2", name: "Books" },
   ];
 
+  const originalConsoleError = console.error;
+
+  beforeAll(() => {
+    jest.spyOn(console, "error").mockImplementation((...args) => {
+      if (typeof args[0] === "string" && args[0].includes('unique "key" prop')) {
+        return; 
+      }
+      originalConsoleError(...args);
+    });
+  });
+
+  afterAll(() => {
+    console.error.mockRestore();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, "log").mockImplementation(() => {});
@@ -50,8 +65,9 @@ describe("CreateCategory Final 100% Coverage", () => {
 
   afterEach(() => {
     cleanup();
-    jest.restoreAllMocks();
+    jest.clearAllMocks();  
   });
+
   // Liu, Yiwei, A0332922J
   test("Should handle Get All business failure (success: false)", async () => {
     axios.get.mockResolvedValue({ data: { success: false } }); 
@@ -62,6 +78,7 @@ describe("CreateCategory Final 100% Coverage", () => {
     
     expect(screen.queryByText("Electronics")).not.toBeInTheDocument();
   });
+
   // Liu, Yiwei, A0332922J
   test("Should handle Get All exception", async () => {
     axios.get.mockRejectedValue(new Error("Get Error"));
@@ -70,6 +87,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(toast.error).toHaveBeenCalledWith("Something wwent wrong in getting catgeory");
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Should successfully create a category", async () => {
     axios.post.mockResolvedValue({ data: { success: true } });
@@ -84,6 +102,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(axios.get).toHaveBeenCalledTimes(2); 
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Should handle create failure (success: false)", async () => {
     axios.post.mockResolvedValue({ data: { success: false, message: "Err" } });
@@ -97,6 +116,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(toast.error).toHaveBeenCalledWith("Err");
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Should handle create exception", async () => {
     axios.post.mockRejectedValue(new Error("Net Err"));
@@ -106,6 +126,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(toast.error).toHaveBeenCalledWith("somthing went wrong in input form");
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Update: Should handle success", async () => {
     render(<CreateCategory />);
@@ -128,6 +149,7 @@ describe("CreateCategory Final 100% Coverage", () => {
     });
   });
 
+  // Liu, Yiwei, A0332922J
   test("Update: Should handle failure (success: false)", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -143,6 +165,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(toast.error).toHaveBeenCalledWith("Update Fail");
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Update: Should handle exception", async () => {
     render(<CreateCategory />);
@@ -159,6 +182,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(toast.error).toHaveBeenCalledWith("Somtihing went wrong");
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Update: Should handle modal cancel", async () => {
     render(<CreateCategory />);
@@ -170,6 +194,7 @@ describe("CreateCategory Final 100% Coverage", () => {
     fireEvent.click(screen.getByTestId("modal-cancel-btn"));
     expect(screen.queryByTestId("modal")).not.toBeInTheDocument();
   });
+
   // Liu, Yiwei, A0332922J
   test("Delete: Should handle success", async () => {
     render(<CreateCategory />);
@@ -182,6 +207,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(toast.success).toHaveBeenCalledWith("category is deleted");
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Delete: Should handle failure", async () => {
     render(<CreateCategory />);
@@ -194,6 +220,7 @@ describe("CreateCategory Final 100% Coverage", () => {
       expect(toast.error).toHaveBeenCalledWith("Del Fail");
     });
   });
+
   // Liu, Yiwei, A0332922J
   test("Delete: Should handle exception", async () => {
     render(<CreateCategory />);
