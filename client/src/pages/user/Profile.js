@@ -1,3 +1,4 @@
+// Tan Wei Zhi, A0253519B
 import React, { useState, useEffect } from "react";
 import UserMenu from "../../components/UserMenu";
 import Layout from "./../../components/Layout";
@@ -34,7 +35,7 @@ const Profile = () => {
         phone,
         address,
       });
-      if (data?.errro) {
+      if (data?.error) {
         toast.error(data?.error);
       } else {
         setAuth({ ...auth, user: data?.updatedUser });
