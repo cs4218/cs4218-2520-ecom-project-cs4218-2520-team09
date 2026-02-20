@@ -32,7 +32,8 @@ const CartPage = () => {
       console.log(error);
     }
   };
-  //detele item
+
+  //delete item
   const removeCartItem = (pid) => {
     try {
       let myCart = [...cart];
@@ -99,8 +100,8 @@ const CartPage = () => {
         <div className="container ">
           <div className="row ">
             <div className="col-md-7  p-0 m-0">
-              {cart?.map((p) => (
-                <div className="row card flex-row" key={p._id}>
+              {cart?.map((p, index) => (
+                <div className="row card flex-row" key={`${p._id}-${index}`}>
                   <div className="col-md-4">
                     <img
                       src={`/api/v1/product/product-photo/${p._id}`}
@@ -162,7 +163,7 @@ const CartPage = () => {
                         })
                       }
                     >
-                      Plase Login to checkout
+                      Please Login to Checkout
                     </button>
                   )}
                 </div>
