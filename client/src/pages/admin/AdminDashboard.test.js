@@ -1,3 +1,5 @@
+// Tan Wei Zhi, A0253519B
+
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import AdminDashboard from "../../pages/admin/AdminDashboard";
