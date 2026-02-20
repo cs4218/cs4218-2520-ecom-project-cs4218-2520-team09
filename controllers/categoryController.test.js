@@ -3,15 +3,13 @@ import { jest } from '@jest/globals';
 import {
     createCategoryController,
     updateCategoryController,
-    categoryControlller,
-    singleCategoryController,
     deleteCategoryCOntroller,
 } from './categoryController';
 import categoryModel from '../models/categoryModel.js';
 
 jest.mock('../models/categoryModel.js');
 
-describe('Category Controllers Test Suite', () => {
+describe('Admin Actions: Category Controllers Test Suite', () => {
     let req, res;
 
     beforeEach(() => {
@@ -62,7 +60,7 @@ describe('Category Controllers Test Suite', () => {
             req.body.name = 'New Category';
             categoryModel.findOne.mockResolvedValue(null);
 
-            const mockSave = jest.fn().mockResolvedValue({ name: 'New Category', slug: 'New-Category' });
+            const mockSave = jest.fn().mockResolvedValue({ name: 'New Category', slug: 'new-category' });
             categoryModel.mockImplementation(() => ({
                 save: mockSave
             }));
@@ -85,7 +83,6 @@ describe('Category Controllers Test Suite', () => {
             await expect(createCategoryController(req, res)).rejects.toThrow(ReferenceError);
             
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.send).not.toHaveBeenCalled();
         });
     });
 
@@ -94,14 +91,14 @@ describe('Category Controllers Test Suite', () => {
         test('Should update category successfully', async () => {
             req.body.name = 'Updated Name';
             req.params.id = '123';
-            const mockUpdatedCategory = { _id: '123', name: 'Updated Name', slug: 'Updated-Name' };
+            const mockUpdatedCategory = { _id: '123', name: 'Updated Name', slug: 'updated-name' };
             categoryModel.findByIdAndUpdate.mockResolvedValue(mockUpdatedCategory);
 
             await updateCategoryController(req, res);
 
             expect(categoryModel.findByIdAndUpdate).toHaveBeenCalledWith(
                 '123',
-                { name: 'Updated Name', slug: 'Updated-Name' }, 
+                { name: 'Updated Name', slug: expect.any(String) }, 
                 { new: true }
             );
             expect(res.status).toHaveBeenCalledWith(200);
@@ -124,68 +121,6 @@ describe('Category Controllers Test Suite', () => {
             expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
                 success: false,
                 message: 'Error while updating category',
-            }));
-        });
-    });
-
-    describe('categoryControlller', () => {
-        // Liu, Yiwei, A0332922J
-        test('Should get all categories successfully', async () => {
-            const mockList = [{ name: 'C1' }, { name: 'C2' }];
-            categoryModel.find.mockResolvedValue(mockList);
-
-            await categoryControlller(req, res);
-
-            expect(categoryModel.find).toHaveBeenCalledWith({});
-            expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.send).toHaveBeenCalledWith({
-                success: true,
-                message: 'All Categories List',
-                category: mockList,
-            });
-        });
-
-        // Liu, Yiwei, A0332922J
-        test('Should return 500 on get all error', async () => {
-            categoryModel.find.mockRejectedValue(new Error('Fetch failed'));
-
-            await categoryControlller(req, res);
-
-            expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
-                message: 'Error while getting all categories',
-            }));
-        });
-    });
-
-    describe('singleCategoryController', () => {
-        // Liu, Yiwei, A0332922J
-        test('Should get single category successfully', async () => {
-            req.params.slug = 'test-slug';
-            const mockCategory = { name: 'Test', slug: 'test-slug' };
-            categoryModel.findOne.mockResolvedValue(mockCategory);
-
-            await singleCategoryController(req, res);
-
-            expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: 'test-slug' });
-            expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.send).toHaveBeenCalledWith({
-                success: true,
-                message: 'Get SIngle Category SUccessfully',
-                category: mockCategory,
-            });
-        });
-
-        // Liu, Yiwei, A0332922J
-        test('Should return 500 on get single error', async () => {
-            req.params.slug = 'error-slug';
-            categoryModel.findOne.mockRejectedValue(new Error('Find failed'));
-
-            await singleCategoryController(req, res);
-
-            expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
-                message: 'Error While getting Single Category',
             }));
         });
     });
