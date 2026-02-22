@@ -159,7 +159,7 @@ describe('CategoryProduct', () => {
         })
 
         // Render the page
-        const { getByText, queryAllByText } = render(
+        const { getByText } = render(
             <MemoryRouter initialEntries={['/category/electronics']}>
                 <Routes>
                     <Route path="/category/:slug" element={<CategoryProduct />} />
@@ -189,7 +189,7 @@ describe('CategoryProduct', () => {
         })
 
         // Render the page
-        const { getByText, queryAllByText } = render(
+        const { getByText } = render(
             <MemoryRouter initialEntries={['/category/electronics']}>
                 <Routes>
                     <Route path="/category/:slug" element={<CategoryProduct />} />
@@ -307,7 +307,7 @@ describe('CategoryProduct', () => {
         })
 
         // Render the page
-        const { getByText, getAllByText } = render(
+        const { getByText } = render(
             <MemoryRouter initialEntries={['/category/electronics']}>
                 <Routes>
                     <Route path="/category/:slug" element={<CategoryProduct />} />
