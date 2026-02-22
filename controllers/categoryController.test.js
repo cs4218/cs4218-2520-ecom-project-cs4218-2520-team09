@@ -3,6 +3,8 @@ import { jest } from '@jest/globals';
 import {
     createCategoryController,
     updateCategoryController,
+    categoryController,
+    singleCategoryController,
     deleteCategoryController,
 } from './categoryController';
 import categoryModel from '../models/categoryModel.js';
@@ -58,7 +60,6 @@ describe('Admin Actions: Category Controllers Test Suite', () => {
         test('Should return 201 and create category successfully', async () => {
             req.body.name = 'New Category';
             categoryModel.findOne.mockResolvedValue(null);
-
             const mockSave = jest.fn().mockResolvedValue({ name: 'New Category', slug: 'new-category' });
             categoryModel.mockImplementation(() => ({
                 save: mockSave
@@ -123,6 +124,68 @@ describe('Admin Actions: Category Controllers Test Suite', () => {
             expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
                 success: false,
                 message: 'Error while updating category',
+            }));
+        });
+    });
+
+    // Liu, Yiwei, A0332922J
+    describe('categoryController', () => {
+        test('Should fetch all categories successfully', async () => {
+            const mockCategories = [{ name: 'Category 1' }, { name: 'Category 2' }];
+            categoryModel.find.mockResolvedValue(mockCategories);
+
+            await categoryController(req, res);
+
+            expect(categoryModel.find).toHaveBeenCalledWith({});
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.send).toHaveBeenCalledWith({
+                success: true,
+                message: 'All Categories List',
+                category: mockCategories,
+            });
+        });
+
+        test('Should return 500 on fetch all error', async () => {
+            categoryModel.find.mockRejectedValue(new Error('Fetch all failed'));
+
+            await categoryController(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
+                success: false,
+                message: 'Error while getting all categories',
+            }));
+        });
+    });
+
+    // Liu, Yiwei, A0332922J
+    describe('singleCategoryController', () => {
+        test('Should fetch a single category successfully', async () => {
+            req.params.slug = 'test-category';
+            const mockCategory = { name: 'Test Category', slug: 'test-category' };
+            categoryModel.findOne.mockResolvedValue(mockCategory);
+
+            await singleCategoryController(req, res);
+
+            expect(categoryModel.findOne).toHaveBeenCalledWith({ slug: 'test-category' });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.send).toHaveBeenCalledWith({
+                success: true,
+                message: 'Get Single Category Successfully',
+                category: mockCategory,
+            });
+        });
+
+        test('Should return 500 on fetch single error', async () => {
+            req.params.slug = 'test-category';
+            categoryModel.findOne.mockRejectedValue(new Error('Fetch single failed'));
+
+            await singleCategoryController(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
+                success: false,
+                message: 'Error while getting single category',
             }));
         });
     });

@@ -8,9 +8,11 @@ export default function useCategory() {
   const getCategories = async () => {
     try {
       const { data } = await axios.get("/api/v1/category/get-category");
-      setCategories(data?.category);
+      //Liu, Yiwei, A0332922J
+      setCategories(data?.category || []);
     } catch (error) {
-      console.log(error);
+      //Liu, Yiwei, A0332922J
+      console.error(error);
     }
   };
 

@@ -62,7 +62,8 @@ export const updateCategoryController = async (req, res) => {
 };
 
 // get all cat
-export const categoryControlller = async (req, res) => {
+// Liu, Yiwei, A0332922J
+export const categoryController = async (req, res) => {
   try {
     const category = await categoryModel.find({});
     res.status(200).send({
@@ -86,7 +87,8 @@ export const singleCategoryController = async (req, res) => {
     const category = await categoryModel.findOne({ slug: req.params.slug });
     res.status(200).send({
       success: true,
-      message: "Get SIngle Category SUccessfully",
+      // Liu, Yiwei, A0332922J
+      message: "Get Single Category Successfully",
       category,
     });
   } catch (error) {
@@ -94,7 +96,8 @@ export const singleCategoryController = async (req, res) => {
     res.status(500).send({
       success: false,
       error,
-      message: "Error While getting Single Category",
+      // Liu, Yiwei, A0332922J
+      message: "Error while getting single category",
     });
   }
 };
