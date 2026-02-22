@@ -4,6 +4,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import CategoryForm from "./CategoryForm"; 
 
+//Liu, Yiwei, A0332922J
 describe("CategoryForm Coverage Test", () => {
   
   // Liu, Yiwei, A0332922J
@@ -19,16 +20,13 @@ describe("CategoryForm Coverage Test", () => {
       />
     );
 
-    
     const input = screen.getByPlaceholderText("Enter new category");
     expect(input).toBeInTheDocument();
     expect(input).toHaveValue("Initial Value");
     
-    
     expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
   });
 
-  
   // Liu, Yiwei, A0332922J
   test("should call setValue when input changes", () => {
     const mockSetValue = jest.fn();
@@ -44,15 +42,12 @@ describe("CategoryForm Coverage Test", () => {
 
     const input = screen.getByPlaceholderText("Enter new category");
     
-    
     fireEvent.change(input, { target: { value: "New Data" } });
 
-    
     expect(mockSetValue).toHaveBeenCalledTimes(1);
     expect(mockSetValue).toHaveBeenCalledWith("New Data");
   });
 
-  
   // Liu, Yiwei, A0332922J
   test("should call handleSubmit when form is submitted", () => {
     const mockSetValue = jest.fn();
@@ -69,10 +64,22 @@ describe("CategoryForm Coverage Test", () => {
 
     const button = screen.getByRole("button", { name: /submit/i });
     
-    
     fireEvent.click(button);
 
-    
     expect(mockSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  //Liu, Yiwei, A0332922J
+  test("should handle null or undefined value for 100% coverage", () => {
+    render(
+      <CategoryForm
+        value={undefined}
+        setValue={jest.fn()}
+        handleSubmit={jest.fn()}
+      />
+    );
+    const input = screen.getByPlaceholderText("Enter new category");
+    
+    expect(input.value).toBe("");
   });
 });
