@@ -1,22 +1,45 @@
-// Liu, Yiwei, A0332922J
+import { jest } from '@jest/globals';
+import fs from "fs";
+import braintree from "braintree";
+
 import {
   createProductController,
   deleteProductController,
   updateProductController,
+  getProductController,
+  getSingleProductController,
+  productPhotoController,
+  productFiltersController,
+  productCountController,
+  productListController,
+  searchProductController,
+  relatedProductController,
+  productCategoryController,
+  brainTreeTokenController,
+  brainTreePaymentController,
 } from "../controllers/productController.js";
-import productModel from "../models/productModel.js";
-import fs from "fs";
 
-jest.mock("braintree", () => {
-  return {
-    BraintreeGateway: jest.fn().mockImplementation(() => ({})),
-    Environment: { Sandbox: "sandbox" },
-  };
-});
+import productModel from "../models/productModel.js";
+import categoryModel from "../models/categoryModel.js";
 
 jest.mock("../models/productModel.js");
+jest.mock("../models/categoryModel.js");
+jest.mock("../models/orderModel.js");
 jest.mock("fs");
 jest.mock("slugify", () => jest.fn((str) => `${str}-slug`));
+
+jest.mock("braintree", () => {
+    const mockFn = { 
+        generate: jest.fn(), 
+        sale: jest.fn() 
+    };
+    mockFn.Environment = { Sandbox: "Sandbox" };
+    mockFn.BraintreeGateway = jest.fn(() => ({
+        clientToken: { generate: mockFn.generate },
+        transaction: { sale: mockFn.sale }
+    }));
+    return mockFn;
+});
 
 // Liu, Yiwei, A0332922J
 describe("Test for Admin View Products Features", () => {
@@ -186,44 +209,6 @@ describe("Test for Admin View Products Features", () => {
     });
   });
 });
-// Mock braintree before importing for gateway
-jest.mock("braintree", () => {
-    const mockFn = { 
-        generate: jest.fn(), 
-        sale: jest.fn() 
-    }
-
-    mockFn.Environment = { Sandbox: "Sandbox" };
-    mockFn.BraintreeGateway = jest.fn(() => ({
-        clientToken: { generate: mockFn.generate },
-        transaction: { sale: mockFn.sale }
-    }));
-
-    return mockFn;
-});
-  
-import {
-    getProductController,
-    getSingleProductController,
-    productPhotoController,
-    productFiltersController,
-    productCountController,
-    productListController,
-    searchProductController,
-    relatedProductController,
-    productCategoryController,
-    brainTreeTokenController,
-    brainTreePaymentController,
-} from '../controllers/productController.js';
-
-import productModel from '../models/productModel.js';
-import categoryModel from '../models/categoryModel.js';
-import braintree from "braintree";
-
-// Mock dependencies
-jest.mock('../models/productModel.js');
-jest.mock('../models/categoryModel.js');
-jest.mock('../models/orderModel.js');
 
 // Chan Cheuk Hong John, A0253435H
 describe('getProductController', () => {
@@ -1295,5 +1280,3 @@ describe('brainTreePaymentController', () => {
     })
 })
 
-// TODO 
-// create/delete/updateProductController
