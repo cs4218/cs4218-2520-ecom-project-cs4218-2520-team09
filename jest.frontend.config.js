@@ -1,4 +1,3 @@
-// Tan Wei Zhi, A0253519B
 export default {
   // name displayed during tests
   displayName: "frontend",
