@@ -87,24 +87,23 @@ describe("Test for Admin View Products Features", () => {
 
   // Liu, Yiwei, A0332922J
   describe("createProductController", () => {
-    // Liu, Yiwei, A0332922J
     validationCases.forEach(({ field, errorMsg }) => {
-      test(`should return 500 if ${field} is missing`, async () => {
+      test(`should return 400 if ${field} is missing`, async () => {
         req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
         delete req.fields[field];
         await createProductController(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.status).toHaveBeenCalledWith(400);
         expect(res.send).toHaveBeenCalledWith({ error: errorMsg });
       });
     });
-    // Liu, Yiwei, A0332922J
-    test("should return 500 if photo size > 1MB", async () => {
+
+    test("should return 400 if photo size > 1MB", async () => {
       req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
       req.files = { photo: { size: 1000001 } };
       await createProductController(req, res);
-      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.status).toHaveBeenCalledWith(400);
     });
-    // Liu, Yiwei, A0332922J
+
     test("should create product successfully with photo", async () => {
       req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
       req.files = { photo: { size: 1000, path: "/path", type: "img/jpg" } };
@@ -116,7 +115,7 @@ describe("Test for Admin View Products Features", () => {
       expect(mockSave).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(201);
     });
-    // Liu, Yiwei, A0332922J
+
     test("should create product successfully without photo", async () => {
       req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
       req.files = {};
@@ -128,7 +127,7 @@ describe("Test for Admin View Products Features", () => {
       expect(res.status).toHaveBeenCalledWith(201);
       expect(fs.readFileSync).not.toHaveBeenCalled();
     });
-    // Liu, Yiwei, A0332922J
+
     test("should cover catch block on error", async () => {
       req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
       productModel.mockImplementation(() => ({ save: jest.fn().mockRejectedValue(new Error("DB Error")) }));
@@ -139,13 +138,23 @@ describe("Test for Admin View Products Features", () => {
 
   // Liu, Yiwei, A0332922J
   describe("deleteProductController", () => {
-    // Liu, Yiwei, A0332922J
-    test("should delete product", async () => {
+    test("should delete product successfully", async () => {
       productModel.findByIdAndDelete = jest.fn().mockReturnValue(chainMock);
+      // Simulating found product
+      chainMock.select.mockResolvedValue({ _id: "123" });
+      
       await deleteProductController(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
     });
-    // Liu, Yiwei, A0332922J
+
+    test("should return 404 if product to delete not found", async () => {
+      productModel.findByIdAndDelete = jest.fn().mockReturnValue(chainMock);
+      chainMock.select.mockResolvedValue(null);
+      
+      await deleteProductController(req, res);
+      expect(res.status).toHaveBeenCalledWith(404);
+    });
+
     test("should cover catch block", async () => {
       productModel.findByIdAndDelete = jest.fn().mockImplementation(() => { throw new Error(); });
       await deleteProductController(req, res);
@@ -156,12 +165,11 @@ describe("Test for Admin View Products Features", () => {
   // Liu, Yiwei, A0332922J
   describe("updateProductController", () => {
     validationCases.forEach(({ field, errorMsg }) => {
-      // Liu, Yiwei, A0332922J
-      test(`should return 500 if ${field} is missing in update`, async () => {
+      test(`should return 400 if ${field} is missing in update`, async () => {
         req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
         delete req.fields[field];
         await updateProductController(req, res);
-        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.status).toHaveBeenCalledWith(400);
         expect(res.send).toHaveBeenCalledWith({ error: errorMsg });
       });
     });
@@ -170,7 +178,7 @@ describe("Test for Admin View Products Features", () => {
       req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
       req.files = { photo: { size: 1000001 } };
       await updateProductController(req, res);
-      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.status).toHaveBeenCalledWith(400);
     });
 
     test("should update successfully with photo", async () => {
@@ -199,6 +207,15 @@ describe("Test for Admin View Products Features", () => {
       expect(mockProduct.save).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(201);
       expect(fs.readFileSync).not.toHaveBeenCalled();
+    });
+
+    test("should return 404 if product to update not found", async () => {
+      req.params.pid = "nonexistent";
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
+      productModel.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+      
+      await updateProductController(req, res);
+      expect(res.status).toHaveBeenCalledWith(404);
     });
 
     test("should cover catch block", async () => {
