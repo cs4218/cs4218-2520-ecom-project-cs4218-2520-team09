@@ -3,6 +3,9 @@ import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { AuthProvider, useAuth } from "./auth";
 
+// Written by Wu Jinhan
+// Student No: A0266075Y
+
 jest.mock("axios", () => ({
   defaults: { headers: { common: {} } },
 }));
