@@ -9,6 +9,7 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 ### Project Workload:
 
 #### Tan Wei Zhi: Profile and Admin Dashboard
+
 #### Zhu Shiqi: Unit Tests for Registration, Login, Search, General
 - `pages/Auth/Register.test.js`
 - `pages/Auth/Login.test.js`
@@ -21,6 +22,14 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - `pages/user/Dashboard.test.js`
 
 #### Chan Cheuk Hong John:
+- `pages/ProductDetails.js`
+- `pages/CategoryProduct.js`
+- `controllers/productController.js (getProductController, getSingleProductController, productPhotoController, productFiltersController, productCountController, productListController, searchProductController, relatedProductController, productCategoryController, brainTreeTokenController, brainTreePaymentController)`
+- `pages/user/Orders.js`
+- `controllers/authController.js (updateProfileController, getOrdersController, getAllOrdersController, orderStatusController)`
+- `context/cart.js`
+- `pages/CartPage.js`
+
 #### Liu Yiwei:
 - components/Form/CategoryForm.js
 - pages/admin/CreateCategory.js
@@ -32,10 +41,9 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - controllers/categoryController.js (createCategoryController, updateCategoryController, deleteCategoryController)
 - controllers/productController.js (createProductController, updateProductController, deleteProductController)
 
-
 #### Wu Jinhan:
 
-### MS1 CI
+### MS1 CI URL
 [CI Running on Github](https://github.com/cs4218/cs4218-2520-ecom-project-cs4218-2520-team09/actions/runs/22273674151/job/64432275013)
 
 ## 3. Website Features
