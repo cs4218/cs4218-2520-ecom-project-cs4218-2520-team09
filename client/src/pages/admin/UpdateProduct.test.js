@@ -1,4 +1,3 @@
-// Liu, Yiwei, A0332922J
 import React from "react";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -38,7 +37,7 @@ jest.mock("./../../components/Layout", () => ({ children, title }) => (
 ));
 jest.mock("./../../components/AdminMenu", () => () => <div data-testid="admin-menu">AdminMenu</div>);
 
-window.prompt = jest.fn();
+window.confirm = jest.fn();
 global.URL.createObjectURL = jest.fn(() => "mock-url");
 
 const mockNavigate = jest.fn();
@@ -48,8 +47,11 @@ jest.mock("react-router-dom", () => ({
     useParams: () => ({ slug: "test-product-slug" }),
 }));
 
+//Liu, Yiwei, A0332922J
 describe("UpdateProduct Component Tests", () => {
     let consoleErrorSpy;
+    let consoleLogSpy;
+
     beforeAll(() => {
         consoleErrorSpy = jest.spyOn(console, "error").mockImplementation((msg) => {
             if (
@@ -62,6 +64,24 @@ describe("UpdateProduct Component Tests", () => {
                 return;
             }
         });
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => { });
+        axios.get.mockImplementation((url) => {
+            if (url.includes("get-product")) {
+                return Promise.resolve({ data: { product: defaultMockProduct } });
+            }
+            if (url.includes("get-category")) {
+                return Promise.resolve({ data: { success: true, category: mockCategories } });
+            }
+            return Promise.resolve({ data: {} });
+        });
+    });
+
+    afterEach(() => {
+        consoleLogSpy.mockRestore();
     });
 
     afterAll(() => {
@@ -83,19 +103,6 @@ describe("UpdateProduct Component Tests", () => {
         { _id: "cat456", name: "Books" }
     ];
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-        axios.get.mockImplementation((url) => {
-            if (url.includes("get-product")) {
-                return Promise.resolve({ data: { product: defaultMockProduct } });
-            }
-            if (url.includes("get-category")) {
-                return Promise.resolve({ data: { success: true, category: mockCategories } });
-            }
-            return Promise.resolve({ data: {} });
-        });
-    });
-
     const renderAndWaitForData = async () => {
         await act(async () => {
             render(
@@ -109,15 +116,13 @@ describe("UpdateProduct Component Tests", () => {
         });
     };
 
-    // Liu, Yiwei, A0332922J
     test("Given product data, When component mounts, Then it fetches and displays data", async () => {
         await renderAndWaitForData();
         expect(axios.get).toHaveBeenCalledWith("/api/v1/product/get-product/test-product-slug");
         expect(axios.get).toHaveBeenCalledWith("/api/v1/category/get-category");
     });
 
-    // Liu, Yiwei, A0332922J
-    test("Given form data, When update button is clicked, Then it triggers the update flow", async () => {
+    test("Given form data, When update button is clicked and succeeds, Then it navigates and shows success toast", async () => {
         axios.put.mockResolvedValue({ data: { success: true } });
 
         await renderAndWaitForData();
@@ -127,11 +132,9 @@ describe("UpdateProduct Component Tests", () => {
         fireEvent.change(screen.getByPlaceholderText("write a Price"), { target: { value: "999" } });
         fireEvent.change(screen.getByPlaceholderText("write a quantity"), { target: { value: "50" } });
         
-        // 战略修改：使用正则匹配绕过空格陷阱
         const categorySelect = screen.getByTestId(/Select a category/i);
         fireEvent.change(categorySelect, { target: { value: "cat456" } });
         
-        // 战略修改：使用正则匹配绕过空格陷阱
         const shippingSelect = screen.getByTestId(/Select Shipping/i);
         fireEvent.change(shippingSelect, { target: { value: "0" } });
 
@@ -150,10 +153,36 @@ describe("UpdateProduct Component Tests", () => {
         expect(mockNavigate).toHaveBeenCalledWith("/dashboard/admin/products");
     });
 
-    // Liu, Yiwei, A0332922J
+    test("Given form data, When update button is clicked but API returns false success, Then it shows error message", async () => {
+        axios.put.mockResolvedValue({ data: { success: false, message: "Update Failed by Backend" } });
+
+        await renderAndWaitForData();
+
+        const updateBtn = screen.getByText("UPDATE PRODUCT");
+        await act(async () => {
+            fireEvent.click(updateBtn);
+        });
+
+        expect(toast.error).toHaveBeenCalledWith("Update Failed by Backend");
+        expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    test("Given form data, When update API rejects, Then it shows catch block error toast", async () => {
+        axios.put.mockRejectedValue(new Error("Network Error"));
+
+        await renderAndWaitForData();
+
+        const updateBtn = screen.getByText("UPDATE PRODUCT");
+        await act(async () => {
+            fireEvent.click(updateBtn);
+        });
+
+        expect(toast.error).toHaveBeenCalledWith("something went wrong");
+    });
+
     test("Given user confirms delete, When delete button clicked, Then it calls delete API", async () => {
         axios.delete.mockResolvedValue({ data: { success: true } });
-        window.prompt.mockReturnValue(true);
+        window.confirm.mockReturnValue(true);
 
         await renderAndWaitForData();
 
@@ -163,16 +192,15 @@ describe("UpdateProduct Component Tests", () => {
         });
 
         await waitFor(() => {
-            expect(window.prompt).toHaveBeenCalled();
+            expect(window.confirm).toHaveBeenCalled();
             expect(axios.delete).toHaveBeenCalledWith("/api/v1/product/delete-product/123");
-            expect(toast.success).toHaveBeenCalledWith("Product DEleted Succfully");
+            expect(toast.success).toHaveBeenCalledWith("Product Deleted Successfully");
             expect(mockNavigate).toHaveBeenCalledWith("/dashboard/admin/products");
         });
     });
 
-    // Liu, Yiwei, A0332922J
     test("Given user cancels delete, When delete button clicked, Then no API call is made", async () => {
-        window.prompt.mockReturnValue(false);
+        window.confirm.mockReturnValue(false);
 
         await renderAndWaitForData();
 
@@ -181,14 +209,15 @@ describe("UpdateProduct Component Tests", () => {
             fireEvent.click(deleteBtn);
         });
 
-        expect(window.prompt).toHaveBeenCalled();
+        expect(window.confirm).toHaveBeenCalled();
         expect(axios.delete).not.toHaveBeenCalled();
     });
 
-    // Liu, Yiwei, A0332922J
-    test("Given API failure, When fetching data on mount, Then console logs error", async () => {
-        const consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => { });
-        axios.get.mockRejectedValue(new Error("Network Error"));
+    test("Given API failure, When fetching product data on mount, Then console logs error", async () => {
+        axios.get.mockImplementation((url) => {
+            if (url.includes("get-product")) return Promise.reject(new Error("Product Fetch Error"));
+            return Promise.resolve({ data: {} });
+        });
 
         await act(async () => {
             render(
@@ -201,14 +230,31 @@ describe("UpdateProduct Component Tests", () => {
         await waitFor(() => {
             expect(consoleLogSpy).toHaveBeenCalled();
         });
-        consoleLogSpy.mockRestore();
     });
 
-    // Liu, Yiwei, A0332922J
+    test("Given API failure, When fetching categories on mount, Then it shows error toast", async () => {
+        axios.get.mockImplementation((url) => {
+            if (url.includes("get-product")) return Promise.resolve({ data: { product: defaultMockProduct } });
+            if (url.includes("get-category")) return Promise.reject(new Error("Category Fetch Error"));
+            return Promise.resolve({ data: {} });
+        });
+
+        await act(async () => {
+            render(
+                <MemoryRouter>
+                    <UpdateProduct />
+                </MemoryRouter>
+            );
+        });
+
+        await waitFor(() => {
+            expect(toast.error).toHaveBeenCalledWith("Something went wrong in getting category");
+        });
+    });
+
     test("Given API failure, When deleting product, Then it shows error toast", async () => {
-        const consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => { });
         axios.delete.mockRejectedValue(new Error("Delete Failed"));
-        window.prompt.mockReturnValue(true);
+        window.confirm.mockReturnValue(true);
 
         await renderAndWaitForData();
 
@@ -220,10 +266,8 @@ describe("UpdateProduct Component Tests", () => {
         await waitFor(() => {
             expect(toast.error).toHaveBeenCalledWith("Something went wrong");
         });
-        consoleLogSpy.mockRestore();
     });
 
-    // Liu, Yiwei, A0332922J
     test("Given a file, When uploaded, Then photo state updates and displays", async () => {
         await renderAndWaitForData();
 
@@ -240,7 +284,6 @@ describe("UpdateProduct Component Tests", () => {
         });
     });
 
-    // Liu, Yiwei, A0332922J
     test("Given product with no shipping, When component mounts, Then false branch of shipping is hit", async () => {
         const noShippingProduct = { ...defaultMockProduct, shipping: false };
         axios.get.mockImplementation((url) => {
@@ -267,5 +310,46 @@ describe("UpdateProduct Component Tests", () => {
 
         const shippingSelect = screen.getByTestId(/Select Shipping/i);
         expect(shippingSelect).toHaveValue("0"); 
+    });
+
+    test("Given form data with photo, When update button is clicked, Then it appends photo to FormData and calls API", async () => {
+        axios.put.mockResolvedValue({ data: { success: true } });
+        await renderAndWaitForData();
+
+        const file = new File(["dummy"], "test.png", { type: "image/png" });
+        const fileInput = document.querySelector('input[type="file"]');
+        await act(async () => {
+            fireEvent.change(fileInput, { target: { files: [file] } });
+        });
+
+        const updateBtn = screen.getByText("UPDATE PRODUCT");
+        await act(async () => {
+            fireEvent.click(updateBtn);
+        });
+
+        expect(axios.put).toHaveBeenCalledWith(
+            "/api/v1/product/update-product/123",
+            expect.any(FormData)
+        );
+    });
+
+    test("Given API returns false success for category, When component mounts, Then categories are not set", async () => {
+        axios.get.mockImplementation((url) => {
+            if (url.includes("get-product")) return Promise.resolve({ data: { product: defaultMockProduct } });
+            if (url.includes("get-category")) return Promise.resolve({ data: { success: false } });
+            return Promise.resolve({ data: {} });
+        });
+
+        await act(async () => {
+            render(
+                <MemoryRouter>
+                    <UpdateProduct />
+                </MemoryRouter>
+            );
+        });
+
+        await waitFor(() => {
+            expect(screen.getByPlaceholderText("write a name")).toHaveValue("Default Name");
+        });
     });
 });

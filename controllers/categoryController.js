@@ -10,7 +10,8 @@ export const createCategoryController = async (req, res) => {
     if (existingCategory) {
       return res.status(200).send({
         success: true,
-        message: "Category Already Exisits",
+        // Liu, Yiwei, A0332922J
+        message: "Category Already Exists",
       });  
     }
     const category = await new categoryModel({
@@ -26,8 +27,10 @@ export const createCategoryController = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      errro,
-      message: "Errro in Category",
+      // Liu, Yiwei, A0332922J
+      error,
+      // Liu, Yiwei, A0332922J
+      message: "Error in Category",
     });
   }
 };
@@ -44,7 +47,8 @@ export const updateCategoryController = async (req, res) => {
     );
     res.status(200).send({
       success: true,
-      messsage: "Category Updated Successfully",
+      // Liu, Yiwei, A0332922J
+      message: "Category Updated Successfully",
       category,
     });
   } catch (error) {
@@ -96,13 +100,15 @@ export const singleCategoryController = async (req, res) => {
 };
 
 //delete category
-export const deleteCategoryCOntroller = async (req, res) => {
+// Liu, Yiwei, A0332922J
+export const deleteCategoryController = async (req, res) => {
   try {
     const { id } = req.params;
     await categoryModel.findByIdAndDelete(id);
     res.status(200).send({
       success: true,
-      message: "Categry Deleted Successfully",
+      // Liu, Yiwei, A0332922J
+      message: "Category Deleted Successfully",
     });
   } catch (error) {
     console.log(error);
