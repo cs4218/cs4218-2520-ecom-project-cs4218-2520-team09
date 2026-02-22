@@ -44,10 +44,10 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - controllers/categoryController.js 
 - controllers/productController.js (createProductController, updateProductController, deleteProductController)
 
-#### Wu Jinhan:
+#### Wu Jinhan: Protected Routes, Admin View Users, General, Home
 
 ### MS1 CI URL
-[CI Running on Github](https://github.com/cs4218/cs4218-2520-ecom-project-cs4218-2520-team09/actions/runs/22273674151/job/64432275013)
+[CI Running on Github](https://github.com/cs4218/cs4218-2520-ecom-project-cs4218-2520-team09/actions/runs/22284240505/job/64459688020)
 
 ## 3. Website Features
 
