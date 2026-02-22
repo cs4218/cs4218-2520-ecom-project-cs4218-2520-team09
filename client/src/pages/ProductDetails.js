@@ -3,14 +3,17 @@ import Layout from "./../components/Layout";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/ProductDetailsStyles.css";
+import { useCart } from "../context/cart";
+import toast from "react-hot-toast";
 
 const ProductDetails = () => {
   const params = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
+  const [cart, setCart] = useCart();
   const [relatedProducts, setRelatedProducts] = useState([]);
 
-  //initalp details
+  //inital details
   useEffect(() => {
     if (params?.slug) getProduct();
   }, [params?.slug]);
@@ -21,7 +24,9 @@ const ProductDetails = () => {
         `/api/v1/product/get-product/${params.slug}`
       );
       setProduct(data?.product);
-      getSimilarProduct(data?.product._id, data?.product.category._id);
+      if (data?.product?._id && data?.product?.category?._id) {
+        getSimilarProduct(data.product._id, data.product.category._id);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -32,7 +37,7 @@ const ProductDetails = () => {
       const { data } = await axios.get(
         `/api/v1/product/related-product/${pid}/${cid}`
       );
-      setRelatedProducts(data?.products);
+      setRelatedProducts(data?.products || []);  // Fix to avoid accessing undefined
     } catch (error) {
       console.log(error);
     }
@@ -52,24 +57,34 @@ const ProductDetails = () => {
         <div className="col-md-6 product-details-info">
           <h1 className="text-center">Product Details</h1>
           <hr />
-          <h6>Name : {product.name}</h6>
-          <h6>Description : {product.description}</h6>
+          <h6>Name: {product.name}</h6>
+          <h6>Description: {product.description}</h6>
           <h6>
-            Price :
-            {product?.price?.toLocaleString("en-US", {
+            Price: {product?.price?.toLocaleString("en-US", {
               style: "currency",
               currency: "USD",
             })}
           </h6>
-          <h6>Category : {product?.category?.name}</h6>
-          <button class="btn btn-secondary ms-1">ADD TO CART</button>
+          <h6>Category: {product?.category?.name}</h6>
+          <button 
+          className="btn btn-secondary ms-1"
+            onClick={() => {
+            setCart([...cart, product]);
+            localStorage.setItem(
+              "cart",
+              JSON.stringify([...cart, product])
+            );
+            toast.success("Item Added to cart");
+          }}>
+            Add To Cart
+            </button>
         </div>
       </div>
       <hr />
       <div className="row container similar-products">
         <h4>Similar Products ➡️</h4>
         {relatedProducts.length < 1 && (
-          <p className="text-center">No Similar Products found</p>
+          <p className="text-center">No Similar Products Found</p>
         )}
         <div className="d-flex flex-wrap">
           {relatedProducts?.map((p) => (
@@ -90,7 +105,7 @@ const ProductDetails = () => {
                   </h5>
                 </div>
                 <p className="card-text ">
-                  {p.description.substring(0, 60)}...
+                    {p.description.length > 60 ? p.description.substring(0, 60) + '...' : p.description}
                 </p>
                 <div className="card-name-price">
                   <button
@@ -99,7 +114,7 @@ const ProductDetails = () => {
                   >
                     More Details
                   </button>
-                  {/* <button
+                  <button
                   className="btn btn-dark ms-1"
                   onClick={() => {
                     setCart([...cart, p]);
@@ -110,8 +125,8 @@ const ProductDetails = () => {
                     toast.success("Item Added to cart");
                   }}
                 >
-                  ADD TO CART
-                </button> */}
+                  Add To Cart
+                </button>
                 </div>
               </div>
             </div>
