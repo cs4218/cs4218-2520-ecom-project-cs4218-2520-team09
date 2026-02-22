@@ -22,6 +22,17 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 
 #### Chan Cheuk Hong John:
 #### Liu Yiwei:
+- components/Form/CategoryForm.js
+- pages/admin/CreateCategory.js
+- pages/admin/CreateProduct.js
+- pages/admin/UpdateProduct.js
+- pages/admin/AdminOrders.js
+- pages/admin/Products.js
+- pages/Policy.js
+- controllers/categoryController.js (createCategoryController, updateCategoryController, deleteCategoryController)
+- controllers/productController.js (createProductController, updateProductController, deleteProductController)
+
+
 #### Wu Jinhan:
 
 ### MS1 CI
