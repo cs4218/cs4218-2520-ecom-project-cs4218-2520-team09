@@ -1,4 +1,3 @@
-// Liu, Yiwei, A0332922J
 import React from "react";
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -36,26 +35,12 @@ jest.mock("antd", () => ({
   ),
 }));
 
+//Liu, Yiwei, A0332922J
 describe("CreateCategory Final 100% Coverage", () => {
   const mockCategories = [
     { _id: "1", name: "Electronics" },
     { _id: "2", name: "Books" },
   ];
-
-  const originalConsoleError = console.error;
-
-  beforeAll(() => {
-    jest.spyOn(console, "error").mockImplementation((...args) => {
-      if (typeof args[0] === "string" && args[0].includes('unique "key" prop')) {
-        return; 
-      }
-      originalConsoleError(...args);
-    });
-  });
-
-  afterAll(() => {
-    console.error.mockRestore();
-  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -65,31 +50,24 @@ describe("CreateCategory Final 100% Coverage", () => {
 
   afterEach(() => {
     cleanup();
-    jest.clearAllMocks();  
   });
 
-  // Liu, Yiwei, A0332922J
   test("Should handle Get All business failure (success: false)", async () => {
     axios.get.mockResolvedValue({ data: { success: false } }); 
-
     render(<CreateCategory />);
-    
     await waitFor(() => expect(axios.get).toHaveBeenCalled());
-    
     expect(screen.queryByText("Electronics")).not.toBeInTheDocument();
   });
 
-  // Liu, Yiwei, A0332922J
   test("Should handle Get All exception", async () => {
     axios.get.mockRejectedValue(new Error("Get Error"));
     render(<CreateCategory />);
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Something wwent wrong in getting catgeory");
+      expect(toast.error).toHaveBeenCalledWith("Something went wrong in getting category");
     });
   });
 
-  // Liu, Yiwei, A0332922J
-  test("Should successfully create a category", async () => {
+  test("Should successfully create a category and clear input", async () => {
     axios.post.mockResolvedValue({ data: { success: true } });
     render(<CreateCategory />);
     
@@ -100,10 +78,10 @@ describe("CreateCategory Final 100% Coverage", () => {
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalledWith("New Cat is created");
       expect(axios.get).toHaveBeenCalledTimes(2); 
+      expect(input.value).toBe(""); 
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Should handle create failure (success: false)", async () => {
     axios.post.mockResolvedValue({ data: { success: false, message: "Err" } });
     render(<CreateCategory />);
@@ -117,17 +95,15 @@ describe("CreateCategory Final 100% Coverage", () => {
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Should handle create exception", async () => {
     axios.post.mockRejectedValue(new Error("Net Err"));
     render(<CreateCategory />);
     fireEvent.click(screen.getByText("Submit"));
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("somthing went wrong in input form");
+      expect(toast.error).toHaveBeenCalledWith("something went wrong in input form");
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Update: Should handle success", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -149,7 +125,6 @@ describe("CreateCategory Final 100% Coverage", () => {
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Update: Should handle failure (success: false)", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -166,7 +141,6 @@ describe("CreateCategory Final 100% Coverage", () => {
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Update: Should handle exception", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -179,11 +153,10 @@ describe("CreateCategory Final 100% Coverage", () => {
     fireEvent.click(submitBtns[1]);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Somtihing went wrong");
+      expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Update: Should handle modal cancel", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -195,7 +168,6 @@ describe("CreateCategory Final 100% Coverage", () => {
     expect(screen.queryByTestId("modal")).not.toBeInTheDocument();
   });
 
-  // Liu, Yiwei, A0332922J
   test("Delete: Should handle success", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -208,7 +180,6 @@ describe("CreateCategory Final 100% Coverage", () => {
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Delete: Should handle failure", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -221,7 +192,6 @@ describe("CreateCategory Final 100% Coverage", () => {
     });
   });
 
-  // Liu, Yiwei, A0332922J
   test("Delete: Should handle exception", async () => {
     render(<CreateCategory />);
     await waitFor(() => screen.getByText("Electronics"));
@@ -230,7 +200,7 @@ describe("CreateCategory Final 100% Coverage", () => {
     fireEvent.click(screen.getAllByText("Delete")[0]);
     
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Somtihing went wrong");
+      expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
   });
 });
