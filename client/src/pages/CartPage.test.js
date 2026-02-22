@@ -125,7 +125,7 @@ describe('CartPage', () => {
         axios.get.mockResolvedValue({ data: { clientToken: "token" } });
 
         // Render the cart page
-        const { getByText } = render(
+        render(
             <MemoryRouter initialEntries={['/cart']}>
                 <Routes>
                     <Route path="/cart" element={<CartPage />} />
@@ -238,7 +238,7 @@ describe('CartPage', () => {
         ]);
 
         // Render the page
-        const { getByText } = render(
+        render(
             <MemoryRouter initialEntries={['/cart']}>
                 <Routes>
                     <Route path="/cart" element={<CartPage />} />
@@ -270,7 +270,7 @@ describe('CartPage', () => {
         ]);
 
         // Render the page
-        const { getByText } = render(
+        render(
             <MemoryRouter initialEntries={['/cart']}>
                 <Routes>
                     <Route path="/cart" element={<CartPage />} />
