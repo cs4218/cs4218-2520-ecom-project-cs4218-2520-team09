@@ -4,25 +4,44 @@
 
 Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-commerce website, offering seamless connectivity and user-friendly features. The platform provides a robust framework for online shopping. The website is designed to adapt to evolving business needs and can be efficiently extended.
 
-Workload:
+## 2. Submission Details
 
-Tan Wei Zhi: Profile and Admin Dashboard
+### Project Workload:
 
-## 2. Website Features
+#### Tan Wei Zhi: Profile and Admin Dashboard
+#### Zhu Shiqi: Unit Tests for Registration, Login, Search, General
+- `pages/Auth/Register.test.js`
+- `pages/Auth/Login.test.js`
+- `controllers/authController.test.js` (first 4 controllers)
+- `components/Form/SearchInput.test.js`
+- `context/search.test.js`
+- `pages/Search.test.js`
+- `components/Routes/Private.test.js`
+- `components/UserMenu.test.js`
+- `pages/user/Dashboard.test.js`
+
+#### Chan Cheuk Hong John:
+#### Liu Yiwei:
+#### Wu Jinhan:
+
+### MS1 CI
+[CI Running on Github](https://github.com/cs4218/cs4218-2520-ecom-project-cs4218-2520-team09/actions/runs/22273674151/job/64432275013)
+
+## 3. Website Features
 
 - **User Authentication**: Secure user authentication system implemented to manage user accounts and sessions.
 - **Payment Gateway Integration**: Seamless integration with popular payment gateways for secure and reliable online transactions.
 - **Search and Filters**: Advanced search functionality and filters to help users easily find products based on their preferences.
 - **Product Set**: Organized product sets for efficient navigation and browsing through various categories and collections.
 
-## 3. Your Task
+## 4. Your Task
 
 - **Unit and Integration Testing**: Utilize Jest for writing and running tests to ensure individual components and functions work as expected, finding and fixing bugs in the process.
 - **UI Testing**: Utilize Playwright for UI testing to validate the behavior and appearance of the website's user interface.
 - **Code Analysis and Coverage**: Utilize SonarQube for static code analysis and coverage reports to maintain code quality and identify potential issues.
 - **Load Testing**: Leverage JMeter for load testing to assess the performance and scalability of the ecommerce platform under various traffic conditions.
 
-## 4. Setting Up The Project
+## 5. Setting Up The Project
 
 ### 1. Installing Node.js
 
@@ -108,7 +127,7 @@ To download and use the MERN (MongoDB, Express.js, React.js, Node.js) app from G
    - Use `npm run dev` to run the app from root directory, which starts the development server.
    - Navigate to `http://localhost:3000` to access the application.
 
-## 5. Unit Testing with Jest
+## 6. Unit Testing with Jest
 
 Unit testing is a crucial aspect of software development aimed at verifying the functionality of individual units or components of a software application. It involves isolating these units and subjecting them to various test scenarios to ensure their correctness.  
 Jest is a popular JavaScript testing framework widely used for unit testing. It offers a simple and efficient way to write and execute tests in JavaScript projects.
