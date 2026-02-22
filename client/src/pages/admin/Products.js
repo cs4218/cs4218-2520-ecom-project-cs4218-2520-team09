@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminMenu from "../../components/AdminMenu";
-import Layout from "./../../components/Layout";
+//Liu, Yiwei, A0332922J
+import Layout from "../../components/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -14,7 +15,8 @@ const Products = () => {
       setProducts(data.products);
     } catch (error) {
       console.log(error);
-      toast.error("Someething Went Wrong");
+      //Liu, Yiwei, A0332922J
+      toast.error("Something went wrong");
     }
   };
 
@@ -28,9 +30,11 @@ const Products = () => {
         <div className="col-md-3">
           <AdminMenu />
         </div>
-        <div className="col-md-9 ">
+        {/* //Liu, Yiwei, A0332922J */}
+        <div className="col-md-9">
           <h1 className="text-center">All Products List</h1>
-          <div className="d-flex">
+          {/* //Liu, Yiwei, A0332922J */}
+          <div className="d-flex flex-wrap">
             {products?.map((p) => (
               <Link
                 key={p._id}
