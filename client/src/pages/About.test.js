@@ -21,7 +21,7 @@ describe("About page", () => {
       "About us - Ecommerce app"
     );
 
-    const img = screen.getByAltText("contactus");
+    const img = screen.getByAltText("Contact Us");
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute("src", "/images/about.jpeg");
 
