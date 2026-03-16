@@ -9,7 +9,7 @@ const Policy = () => {
         <div className="col-md-6 ">
           {/* Liu, Yiwei, A0332922J */}
           <img
-            src="/images/contactus.jpeg"
+            src="/images/policy.png"
             alt="privacy policy"
             style={{ width: "100%" }}
           />
