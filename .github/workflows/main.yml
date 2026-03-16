@@ -12,6 +12,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -39,4 +45,8 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright E2E tests
+        env:
+          # 告诉后端连接到本地临时数据库
+          MONGO_URL: mongodb://localhost:27017/ecom_test
+          JWT_SECRET: test_secret_key
         run: npx playwright test
