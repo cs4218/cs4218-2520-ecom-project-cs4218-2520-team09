@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Install dependencies
+      - name: Install backend dependencies
         run: npm install
 
       - name: Install client dependencies
@@ -34,3 +34,9 @@ jobs:
 
       - name: Run backend Jest tests
         run: npm run test:backend
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright E2E tests
+        run: npx playwright test

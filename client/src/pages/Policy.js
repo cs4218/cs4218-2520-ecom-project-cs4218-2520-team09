@@ -11,7 +11,7 @@ const Policy = () => {
           <img
             src="/images/policy.png"
             alt="privacy policy"
-            style={{ width: "100%" }}
+            style={{ width: "70%" }}
           />
         </div>
         <div className="col-md-4">

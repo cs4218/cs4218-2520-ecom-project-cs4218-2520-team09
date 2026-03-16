@@ -19,7 +19,7 @@ describe("Policy Component", () => {
     const imageElement = screen.getByAltText("privacy policy");
     expect(imageElement).toBeInTheDocument();
     expect(imageElement).toHaveAttribute("src", "/images/policy.png");
-    expect(imageElement).toHaveStyle({ width: "100%" });
+    expect(imageElement).toHaveStyle({ width: "70%" });
 
     expect(screen.getByText("We value your privacy and are committed to protecting your personal data.")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /privacy policy/i })).toBeInTheDocument();
