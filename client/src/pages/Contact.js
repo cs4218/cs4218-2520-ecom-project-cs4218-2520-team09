@@ -18,13 +18,13 @@ const Contact = () => {
             Any queries or info about products? Feel free to call anytime, we are available 24x7.
           </p>
           <p className="mt-3">
-            <span data-testid="mail-icon" aria-hidden="true">Email</span> : help@ecommerceapp.com
+            <span data-testid="mail-icon">Email</span> : help@ecommerceapp.com
           </p>
           <p className="mt-3">
-            <span data-testid="phone-icon" aria-hidden="true">Phone</span> : 012-3456789
+            <span data-testid="phone-icon">Phone</span> : 012-3456789
           </p>
           <p className="mt-3">
-            <span data-testid="support-icon" aria-hidden="true">Support</span> : 1800-0000-0000 (toll free)
+            <span data-testid="support-icon">Support</span> : 1800-0000-0000 (toll free)
           </p>
         </div>
       </div>
