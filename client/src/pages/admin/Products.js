@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import AdminMenu from "../../components/AdminMenu";
-//Liu, Yiwei, A0332922J
 import Layout from "../../components/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -15,8 +14,7 @@ const Products = () => {
       setProducts(data.products);
     } catch (error) {
       console.log(error);
-      //Liu, Yiwei, A0332922J
-      toast.error("Something went wrong");
+            toast.error("Something went wrong");
     }
   };
 

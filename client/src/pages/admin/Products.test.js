@@ -14,7 +14,6 @@ jest.mock("react-hot-toast", () => ({
 jest.mock("../../components/AdminMenu", () => () => <div data-testid="admin-menu">AdminMenu</div>);
 jest.mock("../../components/Layout", () => ({ children }) => <div data-testid="layout">{children}</div>);
 
-//Liu, Yiwei, A0332922J
 describe("Products Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -68,8 +67,7 @@ describe("Products Component", () => {
     await waitFor(() => {
       expect(console.log).toHaveBeenCalledWith(mockError);
       // Liu, Yiwei, A0332922J: Updated to match fixed typo
-      //Liu, Yiwei, A0332922J
-      expect(toast.error).toHaveBeenCalledWith("Something went wrong");
+            expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
   });
 
@@ -89,8 +87,7 @@ describe("Products Component", () => {
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
-  //Liu, Yiwei, A0332922J
-  test("Given a successful API response with undefined products, When the component mounts, Then it handles optional chaining safely", async () => {
+    test("Given a successful API response with undefined products, When the component mounts, Then it handles optional chaining safely", async () => {
     axios.get.mockResolvedValueOnce({ data: {} });
 
     render(

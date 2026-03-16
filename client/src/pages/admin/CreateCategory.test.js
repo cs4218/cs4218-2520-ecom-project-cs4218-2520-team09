@@ -35,7 +35,6 @@ jest.mock("antd", () => ({
   ),
 }));
 
-//Liu, Yiwei, A0332922J
 describe("CreateCategory Final 100% Coverage", () => {
   const mockCategories = [
     { _id: "1", name: "Electronics" },

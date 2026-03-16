@@ -21,16 +21,14 @@ const CreateCategory = () => {
       });
       if (data?.success) {
         toast.success(`${name} is created`);
-        //Liu, Yiwei, A0332922J
-        setName("");
+                setName("");
         getAllCategory();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
       console.log(error);
-      //Liu, Yiwei, A0332922J
-      toast.error("something went wrong in input form");
+            toast.error("something went wrong in input form");
     }
   };
 
@@ -42,8 +40,7 @@ const CreateCategory = () => {
       }
     } catch (error) {
       console.log(error);
-      //Liu, Yiwei, A0332922J
-      toast.error("Something went wrong in getting category");
+            toast.error("Something went wrong in getting category");
     }
   };
 
@@ -68,8 +65,7 @@ const CreateCategory = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      //Liu, Yiwei, A0332922J
-      toast.error("Something went wrong");
+            toast.error("Something went wrong");
     }
   };
 
@@ -85,8 +81,7 @@ const CreateCategory = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      //Liu, Yiwei, A0332922J
-      toast.error("Something went wrong");
+            toast.error("Something went wrong");
     }
   };
 
@@ -116,7 +111,6 @@ const CreateCategory = () => {
                 </thead>
                 <tbody>
                   {categories?.map((c) => (
-                    //Liu, Yiwei, A0332922J
                     <tr key={c._id}>
                       <td>{c.name}</td>
                       <td>

@@ -13,7 +13,6 @@ jest.mock("../components/Layout", () => ({ children, title }) => (
   </div>
 ));
 
-//Liu, Yiwei, A0332922J
 describe("Categories Component", () => {
   test("should render all category links when categories are provided", () => {
     const mockCategories = [

@@ -1,6 +1,5 @@
 import React from "react";
 
-//Liu, Yiwei, A0332922J
 const CategoryForm = ({ handleSubmit, value, setValue }) => {
   return (
     <>
@@ -10,8 +9,7 @@ const CategoryForm = ({ handleSubmit, value, setValue }) => {
             type="text"
             className="form-control"
             placeholder="Enter new category"
-            //Liu, Yiwei, A0332922J
-            value={value || ""}
+                        value={value || ""}
             onChange={(e) => setValue(e.target.value)}
           />
         </div>

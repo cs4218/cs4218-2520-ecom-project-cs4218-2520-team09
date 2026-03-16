@@ -47,7 +47,6 @@ jest.mock("antd", () => {
   };
 });
 
-//Liu, Yiwei, A0332922J
 describe("AdminOrders Component", () => {
   const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
 

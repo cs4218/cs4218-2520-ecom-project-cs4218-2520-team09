@@ -4,7 +4,6 @@ import useCategory from "./useCategory";
 
 jest.mock("axios");
 
-//Liu, Yiwei, A0332922J
 describe("useCategory Hook", () => {
   beforeEach(() => {
     jest.clearAllMocks();
