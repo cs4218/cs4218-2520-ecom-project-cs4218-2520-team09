@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '24'
+          node-version: '20'
 
       - name: Install backend dependencies
         run: npm install
@@ -46,7 +46,6 @@ jobs:
 
       - name: Run Playwright E2E tests
         env:
-          # 告诉后端连接到本地临时数据库
           MONGO_URL: mongodb://localhost:27017/ecom_test
           JWT_SECRET: test_secret_key
-        run: npx playwright test
+        run: npm run test:ui
