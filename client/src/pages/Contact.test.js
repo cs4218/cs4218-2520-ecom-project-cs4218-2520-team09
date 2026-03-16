@@ -36,7 +36,7 @@ describe("Contact Component Tests", () => {
     const image = screen.getByRole("img");
     
     // Then
-    expect(image).toHaveAttribute("src", "/images/contactus.jpeg");
+    expect(image).toHaveAttribute("src", "/images/contact.jpeg");
     expect(image).toHaveAttribute("alt", "Contact Us");
   });
 
