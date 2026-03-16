@@ -13,7 +13,9 @@
     "test": "npm run test:backend && npm run test:frontend",
     "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.frontend.config.js",
     "test:backend": "jest --config jest.backend.config.js",
-    "test:context": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.context.config.js"
+    "test:context": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.context.config.js",
+    "test:integration": "jest --config jest.backend.config.js tests/integration/",
+    "test:ui": "playwright test tests/ui/"
 },
   "keywords": [],
   "author": "RP",
