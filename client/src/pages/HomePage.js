@@ -209,7 +209,7 @@ const HomePage = () => {
                   "Loading ..."
                 ) : (
                   <>
-                    Loadmore <span aria-hidden="true">Reload</span>
+                    Loadmore <span>Reload</span>
                   </>
                 )}
               </button>
