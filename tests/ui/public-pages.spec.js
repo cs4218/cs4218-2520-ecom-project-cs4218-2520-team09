@@ -62,6 +62,8 @@ test.describe("Public pages browsing flow", () => {
 // first run; thereafter, any deviation beyond the threshold causes the test to
 // fail. Run `npx playwright test --update-snapshots` to refresh baselines.
 test.describe("Visual regression – static public pages", () => {
+  test.skip(!!process.env.CI, "Visual baselines are maintained locally and skipped on CI");
+
   test("contact page matches visual baseline", async ({ page }) => {
     await page.goto("/contact");
     await expect(page.getByRole("heading", { name: "CONTACT US" })).toBeVisible();
