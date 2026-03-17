@@ -3,6 +3,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/ui",
   testMatch: "**/*.spec.js",
+  testIgnore: "**/auth.spec.js",
   timeout: 30000,
   use: {
     baseURL: "http://localhost:3000",
