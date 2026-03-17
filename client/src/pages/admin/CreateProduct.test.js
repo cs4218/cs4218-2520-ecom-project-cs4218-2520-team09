@@ -44,7 +44,6 @@ jest.mock("./../../components/AdminMenu", () => () => (
 
 global.URL.createObjectURL = jest.fn(() => "mock_image_url");
 
-//Liu, Yiwei, A0332922J
 describe("CreateProduct Component Test", () => {
   beforeEach(() => {
     jest.clearAllMocks();

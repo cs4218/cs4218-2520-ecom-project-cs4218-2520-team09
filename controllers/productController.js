@@ -22,8 +22,7 @@ export const createProductController = async (req, res) => {
     const { name, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
-    //Liu, Yiwei, A0332922J
-    //validation
+        //validation
     switch (true) {
       case !name:
         return res.status(400).send({ error: "Name is Required" });
@@ -57,8 +56,7 @@ export const createProductController = async (req, res) => {
     res.status(500).send({
       success: false,
       error,
-      //Liu, Yiwei, A0332922J
-      message: "Error in creating product",
+            message: "Error in creating product",
     });
   }
 };
@@ -149,10 +147,8 @@ export const productPhotoController = async (req, res) => {
 //delete controller
 export const deleteProductController = async (req, res) => {
   try {
-    //Liu, Yiwei, A0332922J
-    const product = await productModel.findByIdAndDelete(req.params.pid).select("-photo");
-    //Liu, Yiwei, A0332922J
-    if (!product) {
+        const product = await productModel.findByIdAndDelete(req.params.pid).select("-photo");
+        if (!product) {
       return res.status(404).send({
         success: false,
         message: "Product not found",
@@ -178,8 +174,7 @@ export const updateProductController = async (req, res) => {
     const { name, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
-    //Liu, Yiwei, A0332922J
-    //validation
+        //validation
     switch (true) {
       case !name:
         return res.status(400).send({ error: "Name is Required" });
@@ -202,8 +197,7 @@ export const updateProductController = async (req, res) => {
       { ...req.fields, slug: slugify(name) },
       { new: true }
     );
-    //Liu, Yiwei, A0332922J
-    if (!products) {
+        if (!products) {
       return res.status(404).send({
         success: false,
         message: "Product not found",
@@ -224,8 +218,7 @@ export const updateProductController = async (req, res) => {
     res.status(500).send({
       success: false,
       error,
-      //Liu, Yiwei, A0332922J
-      message: "Error in Update product",
+            message: "Error in Update product",
     });
   }
 };

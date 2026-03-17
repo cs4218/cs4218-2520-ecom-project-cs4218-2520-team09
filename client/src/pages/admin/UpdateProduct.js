@@ -30,8 +30,7 @@ const UpdateProduct = () => {
       setId(data.product._id);
       setDescription(data.product.description);
       setPrice(data.product.price);
-      //Liu, Yiwei, A0332922J
-      // removed duplicate setPrice(data.product.price);
+            // removed duplicate setPrice(data.product.price);
       setQuantity(data.product.quantity);
       setShipping(data.product.shipping);
       setCategory(data.product.category._id);
@@ -52,8 +51,7 @@ const UpdateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      //Liu, Yiwei, A0332922J
-      toast.error("Something went wrong in getting category");
+            toast.error("Something went wrong in getting category");
     }
   };
 
@@ -72,13 +70,11 @@ const UpdateProduct = () => {
       productData.append("quantity", quantity);
       photo && productData.append("photo", photo);
       productData.append("category", category);
-      //Liu, Yiwei, A0332922J
-      const { data } = await axios.put(
+            const { data } = await axios.put(
         `/api/v1/product/update-product/${id}`,
         productData
       );
-      //Liu, Yiwei, A0332922J
-      if (data?.success) {
+            if (data?.success) {
         toast.success("Product Updated Successfully");
         navigate("/dashboard/admin/products");
       } else {
@@ -93,14 +89,12 @@ const UpdateProduct = () => {
   //delete a product
   const handleDelete = async () => {
     try {
-      //Liu, Yiwei, A0332922J
-      let answer = window.confirm("Are You Sure want to delete this product ? ");
+            let answer = window.confirm("Are You Sure want to delete this product ? ");
       if (!answer) return;
       const { data } = await axios.delete(
         `/api/v1/product/delete-product/${id}`
       );
-      //Liu, Yiwei, A0332922J
-      toast.success("Product Deleted Successfully");
+            toast.success("Product Deleted Successfully");
       navigate("/dashboard/admin/products");
     } catch (error) {
       console.log(error);
@@ -214,8 +208,7 @@ const UpdateProduct = () => {
                   onChange={(value) => {
                     setShipping(value);
                   }}
-                  //Liu, Yiwei, A0332922J
-                  value={shipping ? "1" : "0"}
+                                    value={shipping ? "1" : "0"}
                 >
                   <Option value="0">No</Option>
                   <Option value="1">Yes</Option>

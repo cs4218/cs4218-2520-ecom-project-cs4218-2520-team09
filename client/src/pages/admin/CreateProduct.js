@@ -27,8 +27,7 @@ const CreateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      //Liu, Yiwei, A0332922J
-      toast.error("Something went wrong in getting category");
+            toast.error("Something went wrong in getting category");
     }
   };
 
@@ -47,17 +46,14 @@ const CreateProduct = () => {
       productData.append("quantity", quantity);
       productData.append("photo", photo);
       productData.append("category", category);
-      //Liu, Yiwei, A0332922J
-      productData.append("shipping", shipping);
+            productData.append("shipping", shipping);
       
-      //Liu, Yiwei, A0332922J
-      const { data } = await axios.post(
+            const { data } = await axios.post(
         "/api/v1/product/create-product",
         productData
       );
       
-      //Liu, Yiwei, A0332922J
-      if (data?.success) {
+            if (data?.success) {
         toast.success("Product Created Successfully");
         navigate("/dashboard/admin/products");
       } else {
@@ -65,8 +61,7 @@ const CreateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      //Liu, Yiwei, A0332922J
-      toast.error("Something went wrong");
+            toast.error("Something went wrong");
     }
   };
 

@@ -4,16 +4,18 @@ import useCategory from "./useCategory";
 
 jest.mock("axios");
 
-//Liu, Yiwei, A0332922J
 describe("useCategory Hook", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should return empty array on initial render", () => {
+  it("should return empty array on initial render", async () => {
     axios.get.mockResolvedValue({ data: { category: [] } });
     const { result } = renderHook(() => useCategory());
-    expect(result.current).toEqual([]);
+
+    await waitFor(() => {
+      expect(result.current).toEqual([]);
+    });
   });
 
   it("given successful api response, then should update categories state with fetched data", async () => {

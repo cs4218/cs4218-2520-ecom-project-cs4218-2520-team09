@@ -47,7 +47,6 @@ jest.mock("react-router-dom", () => ({
     useParams: () => ({ slug: "test-product-slug" }),
 }));
 
-//Liu, Yiwei, A0332922J
 describe("UpdateProduct Component Tests", () => {
     let consoleErrorSpy;
     let consoleLogSpy;

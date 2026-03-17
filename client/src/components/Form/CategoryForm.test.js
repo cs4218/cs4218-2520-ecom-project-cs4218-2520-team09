@@ -4,7 +4,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import CategoryForm from "./CategoryForm"; 
 
-//Liu, Yiwei, A0332922J
 describe("CategoryForm Coverage Test", () => {
   
   // Liu, Yiwei, A0332922J
@@ -69,8 +68,7 @@ describe("CategoryForm Coverage Test", () => {
     expect(mockSubmit).toHaveBeenCalledTimes(1);
   });
 
-  //Liu, Yiwei, A0332922J
-  test("should handle null or undefined value for 100% coverage", () => {
+    test("should handle null or undefined value for 100% coverage", () => {
     render(
       <CategoryForm
         value={undefined}

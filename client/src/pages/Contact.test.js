@@ -16,7 +16,6 @@ jest.mock("react-icons/bi", () => ({
   BiSupport: () => <span data-testid="support-icon" />,
 }));
 
-//Liu, Yiwei, A0332922J
 describe("Contact Component Tests", () => {
   test("should render the Layout and pass the correct title", () => {
     // Given
@@ -37,7 +36,7 @@ describe("Contact Component Tests", () => {
     const image = screen.getByRole("img");
     
     // Then
-    expect(image).toHaveAttribute("src", "/images/contactus.jpeg");
+    expect(image).toHaveAttribute("src", "/images/contact.jpeg");
     expect(image).toHaveAttribute("alt", "Contact Us");
   });
 
