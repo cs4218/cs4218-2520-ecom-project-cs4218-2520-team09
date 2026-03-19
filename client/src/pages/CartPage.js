@@ -86,13 +86,21 @@ const CartPage = () => {
               {!auth?.user
                 ? "Hello Guest"
                 : `Hello  ${auth?.token && auth?.user?.name}`}
-              <p className="text-center">
-                {cart?.length
-                  ? `You Have ${cart.length} items in your cart ${
-                      auth?.token ? "" : "please login to checkout !"
-                    }`
-                  : " Your Cart Is Empty"}
-              </p>
+                <p className="text-center">
+                {cart?.length ? (
+                    <>
+                    You Have {cart.length} items in your cart
+                    {!auth?.token && (
+                        <>
+                        <br />
+                        Please login to checkout !
+                        </>
+                    )}
+                    </>
+                ) : (
+                    "Your Cart Is Empty"
+                )}
+                </p>
             </h1>
           </div>
         </div>

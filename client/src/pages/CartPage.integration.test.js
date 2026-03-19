@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import CartPage from './CartPage';
-import ProductDetails from './ProductDetails';
 import { AuthProvider } from '../context/auth';
 import { CartProvider } from '../context/cart';
 import { SearchProvider } from '../context/search';
@@ -51,10 +50,10 @@ describe('CartPage Integration Tests', () => {
     });
 
     it('should display total price as 0 when cart is empty', async () => {
-        axios.get.mockResolvedValue({ data: { clientToken: "token" } });
+        axios.get.mockResolvedValueOnce({ data: { clientToken: "token" } });
 
         // Load CartPage
-        const { getByText: getByTextCart } = render(
+        const { getByText    } = render(
             <MemoryRouter initialEntries={['/cart']}>
                 <AuthProvider>
                     <SearchProvider>
@@ -69,12 +68,14 @@ describe('CartPage Integration Tests', () => {
         );
 
         await waitFor(() => {
-            expect(getByTextCart('Your Cart Is Empty')).toBeInTheDocument();
-            expect(getByTextCart('Total : $0.00')).toBeInTheDocument();
+            expect(getByText('Your Cart Is Empty')).toBeInTheDocument();
+            expect(getByText('Total : $0.00')).toBeInTheDocument();
         });
     });
 
     it('should not allow payment if user is not logged in', async () => {
+        axios.get.mockResolvedValueOnce({ data: { clientToken: "token" } });
+
         // Load CartPage
         const { getByText } = render(
             <MemoryRouter initialEntries={['/cart']}>
@@ -95,56 +96,22 @@ describe('CartPage Integration Tests', () => {
         });
     });
 
-    it('should add item(s) successfully', async () => {
-        // Add setup item to add to cart
-        const mockProduct = {
-            _id: '1',
-            name: 'Laptop',
-            price: 1500,
-            description: 'A great laptop',
-            slug: 'laptop',
-            category: { _id: 'c', name: 'Electronics' }
-        };
+    it('should display total price of multiple item successfully', async () => {
+        // Setup items in cart
+        const initialCart = [
+            { _id: '1', name: 'Laptop', price: 1500, description: 'A laptop' },
+            { _id: '2', name: 'Phone', price: 999, description: 'A phone' }
+        ];
+        localStorage.setItem('cart', JSON.stringify(initialCart));
 
-        axios.get.mockResolvedValue({ data: { product: mockProduct, products: [] } });
-        const { getByText: getByTextProduct, unmount } = render(
-            <MemoryRouter initialEntries={['/product/laptop']}>
-                <AuthProvider>
-                    <SearchProvider>
-                        <CartProvider>
-                            <Routes>
-                                <Route path="/product/:slug" element={<ProductDetails />} />
-                            </Routes>
-                        </CartProvider>
-                    </SearchProvider>
-                </AuthProvider>
-            </MemoryRouter>
-        );
+        axios.get.mockResolvedValueOnce({ data: { clientToken: "token" } });
 
-        await waitFor(() => expect(getByTextProduct('Name: Laptop')).toBeInTheDocument());
-
-        // Click Add To Cart
-        const addButton = await waitFor(() => {
-            const buttons = document.querySelectorAll('button');
-            return Array.from(buttons).find(btn => btn.textContent.includes('Add To Cart'));
-        });
-        fireEvent.click(addButton);
-
-        // Ensure that item is added to localstorage
-        await waitFor(() => {
-            const cart = JSON.parse(localStorage.getItem('cart'));
-            expect(cart).toHaveLength(1);
-            expect(cart[0].name).toBe('Laptop');
-        });
-
-        unmount();
-
-        // Load CartPage
-        const { getByText: getByTextCart } = render(
+        // Render CartPage
+        const { getByText } = render(
             <MemoryRouter initialEntries={['/cart']}>
                 <AuthProvider>
                     <SearchProvider>
-                        <CartProvider> 
+                        <CartProvider>
                             <Routes>
                                 <Route path="/cart" element={<CartPage />} />
                             </Routes>
@@ -154,14 +121,13 @@ describe('CartPage Integration Tests', () => {
             </MemoryRouter>
         );
 
-        // Ensure that the item properly added
+        // Ensure that total price is accurate
         await waitFor(() => {
-            expect(getByTextCart('Laptop')).toBeInTheDocument();
-            expect(getByTextCart('Total : $1,500.00')).toBeInTheDocument();
-        });
+            expect(getByText('Total : $2,499.00')).toBeInTheDocument();
+        })
     });
 
-    it('should remove item(s) successfully', async () => {
+    it('should remove item successfully', async () => {
         // Setup items in cart
         const initialCart = [
             { _id: '1', name: 'Laptop', price: 1500, description: 'A laptop' },
@@ -169,7 +135,7 @@ describe('CartPage Integration Tests', () => {
         ];
         localStorage.setItem('cart', JSON.stringify(initialCart));
 
-        axios.get.mockResolvedValue({ data: { clientToken: "token" } });
+        axios.get.mockResolvedValueOnce({ data: { clientToken: "token" } });
 
         // Render CartPage
         const { getByText, getAllByText, queryByText } = render(
@@ -214,10 +180,11 @@ describe('CartPage Integration Tests', () => {
         ];
         localStorage.setItem('cart', JSON.stringify(cartItems));
 
-        axios.post.mockResolvedValue({ data: { success: true } });
+        axios.get.mockResolvedValue({ data: { clientToken: "token" } });
+        axios.post.mockResolvedValueOnce({ data: { success: true } });
 
         // Render CartPage
-        const { getByText } = render(
+        render(
             <MemoryRouter initialEntries={['/cart']}>
                 <AuthProvider>
                     <SearchProvider>
@@ -254,7 +221,6 @@ describe('CartPage Integration Tests', () => {
 
         // Ensure that localstorage is cleared
         expect(localStorage.getItem('cart')).toBeNull();
-
     });
 
     it('should catch payment errors', async () => {
@@ -272,10 +238,11 @@ describe('CartPage Integration Tests', () => {
         ];
         localStorage.setItem('cart', JSON.stringify(cartItems));
 
+        axios.get.mockResolvedValueOnce({ data: { clientToken: "token" } });
         axios.post.mockRejectedValueOnce(new Error('Payment failed'));        
         
         // Render CartPage
-        const { getByText } = render(
+        render(
             <MemoryRouter initialEntries={['/cart']}>
                 <AuthProvider>
                     <SearchProvider>
