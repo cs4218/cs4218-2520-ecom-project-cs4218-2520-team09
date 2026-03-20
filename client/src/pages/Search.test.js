@@ -7,6 +7,18 @@ jest.mock('../context/search', () => ({
   useSearch: jest.fn(),
 }));
 
+jest.mock('../context/cart', () => ({
+  useCart: jest.fn(),
+}));
+
+jest.mock('react-router-dom', () => ({
+  useNavigate: jest.fn(),
+}));
+
+jest.mock('react-hot-toast', () => ({
+  success: jest.fn(),
+}));
+
 jest.mock('../components/Layout', () => ({ children, title }) => (
   <div>
     <title>{title}</title>
@@ -15,6 +27,11 @@ jest.mock('../components/Layout', () => ({ children, title }) => (
 ));
 
 import { useSearch } from '../context/search';
+import { useCart } from '../context/cart';
+import { useNavigate } from 'react-router-dom';
+
+const mockNavigate = jest.fn();
+const mockSetCart = jest.fn();
 
 const mockSetValues = jest.fn();
 
@@ -22,6 +39,8 @@ const mockSetValues = jest.fn();
 describe('Search Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    useNavigate.mockReturnValue(mockNavigate);
+    useCart.mockReturnValue([[], mockSetCart]);
   });
 
   it('renders the page heading "Search Results"', () => {
