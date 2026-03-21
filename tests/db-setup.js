@@ -49,8 +49,6 @@ async function globalSetup() {
             slug: 'books'
         });
 
-        console.log('✅ Created test categories');
-
         // Create test products
         const products = await productModel.create([
             {
@@ -84,7 +82,6 @@ async function globalSetup() {
 
         // Close connection
         await mongoose.connection.close();
-        console.log('✅ Database connection closed\n');
 
     } catch (error) {
         await mongoose.connection.close();

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import mongoose from "mongoose";
 
 test.describe("Category Product Page", () => {
     let electronicsCategory;
