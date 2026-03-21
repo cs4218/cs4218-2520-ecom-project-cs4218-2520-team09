@@ -207,8 +207,8 @@ describe('CartPage Integration Tests', () => {
             { timeout: 10000 } 
         );
         
-        console.log('localStorage:', localStorage.getItem('auth'));
-        console.log('localStorage:', localStorage.getItem('cart'));
+        console.log("clientToken:", clientToken);
+        console.log("instance:", instance);
 
         expect(payButton).not.toBeDisabled();
 
