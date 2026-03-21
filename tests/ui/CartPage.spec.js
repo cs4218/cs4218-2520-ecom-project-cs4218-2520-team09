@@ -34,7 +34,7 @@ test.describe("Cart Page", () => {
             await categoryModel.deleteMany({});
 
             // Create test user
-            const hashedPassword = await hashPassword('cs4218@test.com');
+            const hashedPassword = await hashPassword('test');
             
             await userModel.create({
                 name: 'Test',
@@ -112,7 +112,6 @@ test.describe("Cart Page", () => {
     test.afterAll(async () => {
         if (process.env.CI) {
             await mongoose.connection.close();
-            console.log('✅ [CI] Database connection closed');
         }
     });
 
