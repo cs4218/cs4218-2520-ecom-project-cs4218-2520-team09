@@ -43,8 +43,8 @@ test.describe("Cart Page", () => {
         await page.getByRole('link', { name: 'Electronics' }).click();
         await page.getByRole('button', { name: 'Add To Cart' }).first().click();
         await page.getByRole('button', { name: 'More Details' }).first().click();
-        await expect(page.getByRole('heading')).toContainText('Name: Laptop');
-        await expect(page.getByRole('heading')).toContainText('Category: Electronics');
+        await expect(page.getByText('Name: Laptop')).toBeVisible();
+        await expect(page.getByText('Category: Electronics')).toBeVisible();
     });
 
     test('should be able to see similiar products', async ({ page }) => {
