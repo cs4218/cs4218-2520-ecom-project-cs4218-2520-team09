@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-test.describe.configure({ mode: 'parallel' });
-
 let mongoose, userModel, productModel, categoryModel, hashPassword;
 
 if (process.env.CI) {
