@@ -1,13 +1,121 @@
 import { test, expect } from "@playwright/test";
-// Login details cs4218@test.com
 
 test.describe.configure({ mode: 'parallel' });
 
-test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:3000/cart");
-})
+let mongoose, userModel, productModel, categoryModel, hashPassword;
+
+if (process.env.CI) {
+    mongoose = (await import('mongoose')).default;
+    userModel = (await import('../../models/userModel.js')).default;
+    productModel = (await import('../../models/productModel.js')).default;
+    categoryModel = (await import('../../models/categoryModel.js')).default;
+    hashPassword = (await import('../../helpers/authHelper.js')).hashPassword;
+}
 
 test.describe("Cart Page", () => {
+    let testUser;
+    let electronicsCategory;
+    let booksCategory;
+    let products;
+
+    // Connect to database before all tests
+    test.beforeAll(async () => {
+        // Only connect for github CI
+        if (process.env.CI) {
+            const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/ecom_test';
+            await mongoose.connect(mongoURL);
+        }
+    });
+
+    test.beforeEach(async ({ page }) => {
+        if (process.env.CI) {
+            await userModel.deleteMany({});
+            await productModel.deleteMany({});
+            await categoryModel.deleteMany({});
+
+            // Create test user
+            const hashedPassword = await hashPassword('cs4218@test.com');
+            
+            await userModel.create({
+                name: 'CS4218 Test User',
+                email: 'cs4218@test.com',
+                password: hashedPassword,
+                phone: '98765432',
+                address: '1 Computing Drive',
+                answer: 'test answer',
+                role: 0
+            });
+
+            // Create test categories
+            const electronicsCategory = await categoryModel.create({
+                name: 'Electronics',
+                slug: 'electronics'
+            });
+
+            const booksCategory = await categoryModel.create({
+                name: 'Books',
+                slug: 'books'
+            });
+
+            // Create test products
+            await productModel.create([
+                {
+                    name: 'Book',
+                    slug: 'book',
+                    description: 'book',
+                    price: 50,
+                    category: booksCategory._id,
+                    quantity: 50,
+                    shipping: true
+                },
+                {
+                    name: 'Smartphone',
+                    slug: 'smartphone',
+                    description: 'Smartphone',
+                    price: 999,
+                    category: electronicsCategory._id,
+                    quantity: 50,
+                    shipping: true
+                },
+                {
+                    name: 'Laptop',
+                    slug: 'laptop',
+                    description: 'Laptop',
+                    price: 1500,
+                    category: electronicsCategory._id,
+                    quantity: 30,
+                    shipping: true
+                },
+                {
+                    name: 'Mouse',
+                    slug: 'mouse',
+                    description: 'mouse',
+                    price: 25,
+                    category: electronicsCategory._id,
+                    quantity: 100,
+                    shipping: true
+                }
+            ]);
+        }
+        
+        await page.goto('http://localhost:3000/cart');
+    });
+
+    test.afterEach(async () => {
+        if (process.env.CI) {
+            await userModel.deleteMany({});
+            await productModel.deleteMany({});
+            await categoryModel.deleteMany({});
+        }
+    });
+
+    test.afterAll(async () => {
+        if (process.env.CI) {
+            await mongoose.connection.close();
+            console.log('✅ [CI] Database connection closed');
+        }
+    });
+
     test("should be accessable from home page (or any page)", async ({ page }) => {
         await page.goto('http://localhost:3000/cart');
         await page.getByRole('link', { name: 'Home' }).click();

@@ -16,8 +16,7 @@
     "test:integration": "jest --config jest.backend.config.js tests/integration/",
     "test:integration:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.frontend.config.js --testPathPattern='client/src/tests/integration/'",
     "test:integration:all": "npm run test:integration && npm run test:integration:frontend",
-    "test:ui": "playwright test tests/ui/",
-    "seed:test": "node .github/defaultDB.js"
+    "test:ui": "playwright test tests/ui/"
   },
   "keywords": [],
   "author": "RP",

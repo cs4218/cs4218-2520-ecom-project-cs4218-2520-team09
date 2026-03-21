@@ -47,12 +47,6 @@ jobs:
           JWT_SECRET: test_secret_key
         run: npm run test:integration:all
 
-      - name: Populate test database
-        env:
-          MONGO_URL: mongodb://localhost:27017/ecom_test
-          JWT_SECRET: test_secret_key
-        run: npm run seed:test
-
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
