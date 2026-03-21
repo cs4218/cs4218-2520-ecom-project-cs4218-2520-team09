@@ -26,76 +26,7 @@ test.describe("Cart Page", () => {
     });
 
     test.beforeEach(async ({ page }) => {
-        if (process.env.CI) {
-            await userModel.deleteMany({});
-            await productModel.deleteMany({});
-            await categoryModel.deleteMany({});
-
-            // Create test user
-            const hashedPassword = await hashPassword('test');
-            
-            await userModel.create({
-                name: 'Test',
-                email: 'test@test.com',
-                password: hashedPassword,
-                phone: '98765432',
-                address: '1 Computing Drive',
-                answer: 'test answer',
-                role: 0
-            });
-
-            // Create test categories
-            const electronicsCategory = await categoryModel.create({
-                name: 'Electronics',
-                slug: 'electronics'
-            });
-
-            const booksCategory = await categoryModel.create({
-                name: 'Books',
-                slug: 'books'
-            });
-
-            // Create test products
-            await productModel.create([
-                {
-                    name: 'Book',
-                    slug: 'book',
-                    description: 'book',
-                    price: 50,
-                    category: booksCategory._id,
-                    quantity: 50,
-                    shipping: true
-                },
-                {
-                    name: 'Smartphone',
-                    slug: 'smartphone',
-                    description: 'Smartphone',
-                    price: 999.99,
-                    category: electronicsCategory._id,
-                    quantity: 50,
-                    shipping: true
-                },
-                {
-                    name: 'Laptop',
-                    slug: 'laptop',
-                    description: 'Laptop',
-                    price: 1500,
-                    category: electronicsCategory._id,
-                    quantity: 30,
-                    shipping: true
-                }
-            ]);
-        }
-        
         await page.goto('http://localhost:3000/cart');
-    });
-
-    test.afterEach(async () => {
-        if (process.env.CI) {
-            await userModel.deleteMany({});
-            await productModel.deleteMany({});
-            await categoryModel.deleteMany({});
-        }
     });
 
     test.afterAll(async () => {

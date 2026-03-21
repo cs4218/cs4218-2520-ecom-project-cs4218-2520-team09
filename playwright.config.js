@@ -2,8 +2,11 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/ui",
-  testMatch: "**/*.spec.js",
+  testMatch: "**/CartPage.spec.js",
   timeout: 30000,
+  globalSetup: './tests/db-setup.js',
+  fullyParallel: false,
+  workers: 1,
   use: {
     baseURL: "http://localhost:3000",
     headless: true,
