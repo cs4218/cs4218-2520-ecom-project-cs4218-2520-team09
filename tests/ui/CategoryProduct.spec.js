@@ -58,7 +58,5 @@ test.describe("Category Product Page", () => {
         await expect(page.locator('h1')).toContainText('You Have 2 items in your cart');
         await expect(page.getByRole('main')).toContainText('Laptop');
         await expect(page.getByRole('main')).toContainText('Smartphone');
-      });
-    });   
-
+    });
 })
