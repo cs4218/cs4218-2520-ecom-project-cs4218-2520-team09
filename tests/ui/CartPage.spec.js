@@ -37,8 +37,8 @@ test.describe("Cart Page", () => {
             const hashedPassword = await hashPassword('cs4218@test.com');
             
             await userModel.create({
-                name: 'CS4218 Test User',
-                email: 'cs4218@test.com',
+                name: 'Test',
+                email: 'test',
                 password: hashedPassword,
                 phone: '98765432',
                 address: '1 Computing Drive',
@@ -152,9 +152,9 @@ test.describe("Cart Page", () => {
         // Login as test user
         await page.getByRole('link', { name: 'Login' }).click();
         await page.getByRole('textbox', { name: 'Enter Your Email' }).click();
-        await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('cs4218@test.com');
+        await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('test@test.com');
         await page.getByRole('textbox', { name: 'Enter Your Password' }).click();
-        await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('cs4218@test.com');
+        await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('test');
         await page.getByRole('button', { name: 'LOGIN' }).click();
         await page.getByRole('button', { name: 'ADD TO CART' }).nth(1).click();
         await page.getByRole('link', { name: 'Cart' }).click();
@@ -187,9 +187,9 @@ test.describe("Cart Page", () => {
         // User needs to be logged in to make payment
         await page.getByRole('link', { name: 'Login' }).click();
         await page.getByRole('textbox', { name: 'Enter Your Email' }).click();
-        await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('cs4218@test.com');
+        await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('test@test.com');
         await page.getByRole('textbox', { name: 'Enter Your Password' }).click();
-        await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('cs4218@test.com');
+        await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('test');
         await page.getByRole('button', { name: 'LOGIN' }).click();
 
         // Redirected to home page after login, add item to cart
