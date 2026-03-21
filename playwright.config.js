@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/ui",
-  testMatch: "**/CartPage.spec.js",
+  testMatch: "**/*.spec.js",
   timeout: 30000,
   globalSetup: './tests/db-setup.js',
   fullyParallel: false,
