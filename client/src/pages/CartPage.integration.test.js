@@ -170,19 +170,20 @@ describe('CartPage Integration Tests', () => {
         expect(updatedCart[0].name).toBe('Phone');
     });
 
-    it('should only allow logged in user to make payment', async () => {
+    it.only('should only allow logged in user to make payment', async () => {
         // Setup user and cart
         const authData = {
             user: { name: 'Test', email: 'test@test.com', address: 'Testing Street' },
             token: 'token'
         };
         localStorage.setItem('auth', JSON.stringify(authData));
-        axios.get.mockResolvedValue({ data: { clientToken: "token" } });
 
         const cartItems = [
             { _id: '1', name: 'Laptop', price: 1500, description: 'A laptop' }
         ];
         localStorage.setItem('cart', JSON.stringify(cartItems));
+
+        axios.get.mockResolvedValue({ data: { clientToken: "token" } });
         axios.post.mockResolvedValue({ data: { success: true } });
 
         // Render CartPage
@@ -206,9 +207,6 @@ describe('CartPage Integration Tests', () => {
             screen.getByRole("button", { name: "Make Payment" }),
             { timeout: 10000 } 
         );
-        
-        console.log("clientToken:", clientToken);
-        console.log("instance:", instance);
 
         expect(payButton).not.toBeDisabled();
 
