@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 import mongoose from "mongoose";
 
+// Written by
+// Name: Chan Cheuk Hong John
+// Student No: A0253435H
+
 test.describe("Cart Page", () => {
     let testUser;
     let electronicsCategory;
