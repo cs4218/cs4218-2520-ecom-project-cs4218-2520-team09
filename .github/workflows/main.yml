@@ -35,11 +35,17 @@ jobs:
           cd client
           npm install
 
-      - name: Run frontend Jest tests
-        run: npm run test:frontend
+      - name: Run frontend unit tests
+        run: npm run test:unit:frontend
 
-      - name: Run backend Jest tests
-        run: npm run test:backend
+      - name: Run backend unit tests
+        run: npm run test:unit:backend
+
+      - name: Run integration tests
+        env:
+          MONGO_URL: mongodb://localhost:27017/ecom_test
+          JWT_SECRET: test_secret_key
+        run: npm run test:integration:all
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
