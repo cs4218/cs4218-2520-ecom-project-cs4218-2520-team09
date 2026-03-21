@@ -207,10 +207,16 @@ describe('CartPage Integration Tests', () => {
             screen.getByRole("button", { name: "Make Payment" })
         );
 
+        console.log('localStorage:', localStorage.getItem('cart'));
+
+        expect(payButton).not.toBeDisabled();
+
         // Make payment
-        await act(() => {
+        await act(async () => {
             fireEvent.click(payButton);
         })
+
+        console.log('axios calls:', axios.post.mock.calls);
 
         // Ensure that Payment API is called
         await waitFor(() => {
