@@ -8,6 +8,8 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 
 ### Project Workload:
 
+### MS1
+
 #### Tan Wei Zhi: Profile and Admin Dashboard
 
 #### Zhu Shiqi: Unit Tests for Registration, Login, Search, General
@@ -31,23 +33,40 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - `pages/CartPage.js`
 
 #### Liu Yiwei:
-- components/Form/CategoryForm.js
-- pages/admin/CreateCategory.js
-- pages/admin/CreateProduct.js
-- pages/admin/UpdateProduct.js
-- pages/admin/AdminOrders.js
-- pages/admin/Products.js
-- pages/Policy.js
-- pages/Contact.js
-- hooks/useCategory.js
-- pages/Categories.js
-- controllers/categoryController.js 
-- controllers/productController.js (createProductController, updateProductController, deleteProductController)
+- `components/Form/CategoryForm.js`
+- `pages/admin/CreateCategory.js`
+- `pages/admin/CreateProduct.js`
+- `pages/admin/UpdateProduct.js`
+- `pages/admin/AdminOrders.js`
+- `pages/admin/Products.js`
+- `pages/Policy.js`
+- `pages/Contact.js`
+- `hooks/useCategory.js`
+- `pages/Categories.js`
+- `controllers/categoryController.js`
+- `controllers/productController.js` (createProductController, updateProductController, deleteProductController)
 
 #### Wu Jinhan: Protected Routes, Admin View Users, General, Home
 
 ### MS1 CI URL
 [CI Running on Github](https://github.com/cs4218/cs4218-2520-ecom-project-cs4218-2520-team09/actions/runs/22284240505/job/64459688020)
+
+### MS2
+
+#### Tan Wei Zhi
+
+#### Zhu Shiqi: Integration and UI Tests for Registration, Login, Search
+- `tests/integration/search.integration.test.js`
+- `tests/integration/login.integration.test.js`
+- `tests/integration/register.integration.test.js`
+- `tests/ui/auth.spec.js`
+- `tests/ui/search.spec.js`
+
+#### Chan Cheuk Hong John
+
+#### Liu Yiwei
+
+#### Wu Jinhan
 
 ## 3. Website Features
 
