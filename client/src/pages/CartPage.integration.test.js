@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { render, fireEvent, waitFor, act, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import CartPage from './CartPage';
@@ -46,8 +46,11 @@ Object.defineProperty(window, 'matchMedia', {
 describe('CartPage Integration Tests', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        localStorage.clear();
     });
+
+    afterEach(() => {
+        localStorage.clear();
+    })
 
     it('should display total price as 0 when cart is empty', async () => {
         axios.get.mockResolvedValueOnce({ data: { clientToken: "token" } });
@@ -181,16 +184,17 @@ describe('CartPage Integration Tests', () => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
 
         axios.get.mockResolvedValue({ data: { clientToken: "token" } });
-        axios.post.mockResolvedValueOnce({ data: { success: true } });
+        axios.post.mockResolvedValue({ data: { success: true } });
 
         // Render CartPage
         render(
             <MemoryRouter initialEntries={['/cart']}>
                 <AuthProvider>
-                    <SearchProvider>
+                        <SearchProvider>
                         <CartProvider>
                             <Routes>
                                 <Route path="/cart" element={<CartPage />} />
+                                <Route path="/dashboard/user/orders" element={<div>Orders Page</div>} />
                             </Routes>
                         </CartProvider>
                     </SearchProvider>
@@ -204,7 +208,9 @@ describe('CartPage Integration Tests', () => {
         );
 
         // Make payment
-        fireEvent.click(payButton);
+        await act(() => {
+            fireEvent.click(payButton);
+        })
 
         // Ensure that Payment API is called
         await waitFor(() => {
@@ -239,7 +245,7 @@ describe('CartPage Integration Tests', () => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
 
         axios.get.mockResolvedValueOnce({ data: { clientToken: "token" } });
-        axios.post.mockRejectedValueOnce(new Error('Payment failed'));        
+        axios.post.mockRejectedValue(new Error('Payment failed'));        
         
         // Render CartPage
         render(
