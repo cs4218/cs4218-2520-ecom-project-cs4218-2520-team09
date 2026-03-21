@@ -36,7 +36,7 @@ test.describe("Cart Page", () => {
             
             await userModel.create({
                 name: 'Test',
-                email: 'test',
+                email: 'test@test.com',
                 password: hashedPassword,
                 phone: '98765432',
                 address: '1 Computing Drive',
@@ -70,7 +70,7 @@ test.describe("Cart Page", () => {
                     name: 'Smartphone',
                     slug: 'smartphone',
                     description: 'Smartphone',
-                    price: 999,
+                    price: 999.99,
                     category: electronicsCategory._id,
                     quantity: 50,
                     shipping: true
@@ -82,15 +82,6 @@ test.describe("Cart Page", () => {
                     price: 1500,
                     category: electronicsCategory._id,
                     quantity: 30,
-                    shipping: true
-                },
-                {
-                    name: 'Mouse',
-                    slug: 'mouse',
-                    description: 'mouse',
-                    price: 25,
-                    category: electronicsCategory._id,
-                    quantity: 100,
                     shipping: true
                 }
             ]);
@@ -153,7 +144,7 @@ test.describe("Cart Page", () => {
         await page.getByRole('textbox', { name: 'Enter Your Password' }).click();
         await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('test');
         await page.getByRole('button', { name: 'LOGIN' }).click();
-        await page.getByRole('button', { name: 'ADD TO CART' }).nth(1).click();
+        await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
         await page.getByRole('link', { name: 'Cart' }).click();
 
         // Locate the Update Address and click on it 
@@ -190,7 +181,7 @@ test.describe("Cart Page", () => {
         await page.getByRole('button', { name: 'LOGIN' }).click();
 
         // Redirected to home page after login, add item to cart
-        await page.getByRole('button', { name: 'ADD TO CART' }).nth(3).click();
+        await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
 
         // Go back to cart page to make payment
         await page.getByRole('link', { name: 'Cart' }).click();
