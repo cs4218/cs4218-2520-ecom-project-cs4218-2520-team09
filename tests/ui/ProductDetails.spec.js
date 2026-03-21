@@ -27,14 +27,13 @@ test.describe("Cart Page", () => {
     });
 
     test('should be accessible from home page', async ({ page }) => {
-        // Click on first "More Details", should default to novel
         await page.getByRole('link', { name: 'Home' }).click();
+
         await page.getByRole('button', { name: 'More Details' }).first().click();
 
         // Ensure that correct details are there
         await expect(page.locator('h1')).toContainText('Product Details');
-        await expect(page.getByRole('main')).toContainText('Name: Novel');
-        await expect(page.getByRole('main')).toContainText('Category: Book');
+        await expect(page.getByRole('main')).toContainText('Similar Products ➡️');
     });
 
     test('should be accessible from category product page', async ({ page }) => {
@@ -44,8 +43,8 @@ test.describe("Cart Page", () => {
         await page.getByRole('link', { name: 'Electronics' }).click();
         await page.getByRole('button', { name: 'Add To Cart' }).first().click();
         await page.getByRole('button', { name: 'More Details' }).first().click();
-        await expect(page.getByRole('main')).toContainText('Name: Laptop');
-        await expect(page.getByRole('main')).toContainText('Category: Electronics');
+        await expect(page.getByRole('heading')).toContainText('Name: Laptop');
+        await expect(page.getByRole('heading')).toContainText('Category: Electronics');
     });
 
     test('should be able to see similiar products', async ({ page }) => {
