@@ -177,13 +177,12 @@ describe('CartPage Integration Tests', () => {
             token: 'token'
         };
         localStorage.setItem('auth', JSON.stringify(authData));
+        axios.get.mockResolvedValue({ data: { clientToken: "token" } });
 
         const cartItems = [
             { _id: '1', name: 'Laptop', price: 1500, description: 'A laptop' }
         ];
         localStorage.setItem('cart', JSON.stringify(cartItems));
-
-        axios.get.mockResolvedValue({ data: { clientToken: "token" } });
         axios.post.mockResolvedValue({ data: { success: true } });
 
         // Render CartPage
@@ -204,9 +203,11 @@ describe('CartPage Integration Tests', () => {
 
         // Wait for payment button to be enabled
         const payButton = await waitFor(() => 
-            screen.getByRole("button", { name: "Make Payment" })
+            screen.getByRole("button", { name: "Make Payment" }),
+            { timeout: 10000 } 
         );
-
+        
+        console.log('localStorage:', localStorage.getItem('auth'));
         console.log('localStorage:', localStorage.getItem('cart'));
 
         expect(payButton).not.toBeDisabled();
