@@ -1,15 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-let mongoose, userModel, productModel, categoryModel, hashPassword;
-
-if (process.env.CI) {
-    mongoose = (await import('mongoose')).default;
-    userModel = (await import('../../models/userModel.js')).default;
-    productModel = (await import('../../models/productModel.js')).default;
-    categoryModel = (await import('../../models/categoryModel.js')).default;
-    hashPassword = (await import('../../helpers/authHelper.js')).hashPassword;
-}
-
 test.describe("Cart Page", () => {
     let testUser;
     let electronicsCategory;
@@ -20,7 +10,7 @@ test.describe("Cart Page", () => {
     test.beforeAll(async () => {
         // Only connect for github CI
         if (process.env.CI) {
-            const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/ecom_test';
+            const mongoURL = process.env.MONGO_URL;
             await mongoose.connect(mongoURL);
         }
     });
@@ -45,7 +35,7 @@ test.describe("Cart Page", () => {
     test('should allow users to add items into cart from other pages', async ({ page }) => {
         // Add items from the home page and check if they are in the cart
         await page.getByRole('link', { name: 'Home' }).click();
-        await page.getByRole('button', { name: 'ADD TO CART' }).nth(3).click();
+        await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
         await page.getByRole('link', { name: 'Cart' }).click();
         await expect(page.locator('h1')).toContainText('You Have 1 items in your cart');
     });
@@ -53,8 +43,8 @@ test.describe("Cart Page", () => {
     test('should allow users to remove item from cart', async ({ page }) => {
         // Add 2 items from home page
         await page.getByRole('link', { name: 'Home' }).click();
-        await page.getByRole('button', { name: 'ADD TO CART' }).nth(3).click();
-        await page.getByRole('button', { name: 'ADD TO CART' }).nth(3).click();
+        await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
+        await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
         
         // Return to cart page and remove items 1 by 1 
         await page.getByRole('link', { name: 'Cart' }).click();
