@@ -65,6 +65,18 @@ test.describe("Cart Page", () => {
         await expect(page.getByRole('main')).toContainText('Smartphone');
     });
 
+    test('should be able to access other product details through similar products', async ({ page }) => {
+        // Go to laptop page
+        await page.goto('http://localhost:3000/product/laptop');
+
+        // Click on smartphone(similar product) to go to smartphone page
+        await page.getByRole('button', { name: 'More Details' }).first().click();
+
+        // Expect to still be on a product detail page
+        await expect(page.locator('h1')).toContainText('Product Details');
+        await expect(page.getByRole('main')).toContainText('Similar Products ➡️');
+    });
+
     test('should be able add products into cart from product detail', async ({ page }) => {
         // Go to laptop page
         await page.goto('http://localhost:3000/product/laptop');
