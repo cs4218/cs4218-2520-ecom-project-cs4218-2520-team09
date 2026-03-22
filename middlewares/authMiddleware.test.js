@@ -34,10 +34,13 @@ describe("authMiddleware", () => {
       expect(next).toHaveBeenCalledTimes(1);
     });
 
-    it("logs error when JWT.verify throws and does not call next", async () => {
+    it("logs error, returns 401, and does not call next when JWT.verify throws", async () => {
       const next = jest.fn();
       const req = { headers: { authorization: "bad" } };
-      const res = {};
+      const send = jest.fn().mockReturnThis();
+      const res = {
+        status: jest.fn().mockReturnValue({ send }),
+      };
       const err = new Error("invalid token");
       JWT.verify.mockImplementationOnce(() => {
         throw err;
@@ -47,6 +50,11 @@ describe("authMiddleware", () => {
 
       expect(console.log).toHaveBeenCalledWith(err);
       expect(next).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(send).toHaveBeenCalledWith({
+        success: false,
+        message: "Unauthorized",
+      });
     });
   });
 
