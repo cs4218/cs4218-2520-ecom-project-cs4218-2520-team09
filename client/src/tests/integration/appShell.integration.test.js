@@ -28,15 +28,15 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import "@testing-library/jest-dom";
 import axios from "axios";
 
-import { AuthProvider } from "context/auth";
-import { CartProvider } from "context/cart";
-import { SearchProvider } from "context/search";
+import { AuthProvider } from "../../context/auth";
+import { CartProvider } from "../../context/cart";
+import { SearchProvider } from "../../context/search";
 
-import HomePage from "pages/HomePage";
-import About from "pages/About";
-import Pagenotfound from "pages/Pagenotfound";
-import PrivateRoute from "components/Routes/Private";
-import Dashboard from "pages/user/Dashboard";
+import HomePage from "../../pages/HomePage";
+import About from "../../pages/About";
+import Pagenotfound from "../../pages/Pagenotfound";
+import PrivateRoute from "../../components/Routes/Private";
+import Dashboard from "../../pages/user/Dashboard";
 
 // ── External-boundary mocks ──────────────────────────────────────────────────
 
