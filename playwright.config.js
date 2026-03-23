@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: "./tests/ui",
   testMatch: "**/*.spec.js",
   timeout: 30000,
+  globalSetup: './tests/db-setup.js',
   use: {
     baseURL: "http://localhost:3000",
     headless: true,
