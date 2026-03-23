@@ -84,7 +84,7 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - `tests/ui/ProductDetails.spec.js`
 
 #### Liu Yiwei
-- tests/integration/categoryController.integration.test.js
+- `tests/integration/categoryController.integration.test.js`
 - `src/tests/integration/Categories.integration.test.js`
 - `src/tests/integration/CreateCategory.integration.test.js`
 - `tests/ui/public-pages.spec.js`
