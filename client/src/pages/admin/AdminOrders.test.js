@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import AdminOrders from "./AdminOrders";
 import { useAuth } from "../../context/auth";
@@ -97,11 +97,9 @@ describe("AdminOrders integration", () => {
 
     render(<AdminOrders />);
 
-    await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/all-orders");
-    });
-
+    // findByText waits for setOrders to complete (state update inside act)
     expect(await screen.findByText("Admin Buyer")).toBeInTheDocument();
+    expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/all-orders");
     expect(screen.getByText("Laptop")).toBeInTheDocument();
     expect(screen.getByText("Mouse")).toBeInTheDocument();
     expect(screen.getByText("Success")).toBeInTheDocument();
@@ -117,16 +115,15 @@ describe("AdminOrders integration", () => {
     render(<AdminOrders />);
 
     const select = await screen.findByTestId("antd-select");
-    fireEvent.change(select, { target: { value: "Shipped" } });
 
-    await waitFor(() => {
-      expect(axios.put).toHaveBeenCalledWith("/api/v1/auth/order-status/order-1", {
-        status: "Shipped",
-      });
+    // Wrap the event in act so the async handleChange (put + getOrders) fully completes
+    await act(async () => {
+      fireEvent.change(select, { target: { value: "Shipped" } });
     });
 
-    await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledTimes(2);
+    expect(axios.put).toHaveBeenCalledWith("/api/v1/auth/order-status/order-1", {
+      status: "Shipped",
     });
+    expect(axios.get).toHaveBeenCalledTimes(2);
   });
 });

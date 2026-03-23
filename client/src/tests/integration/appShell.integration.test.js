@@ -1,0 +1,269 @@
+/*
+ * Integration Tests: App Shell
+ * (Layout + Header + Footer + Spinner + client-side routing)
+ *
+ * Approach: Bottom-Up Integration
+ *
+ * The real Layout, Header, Footer, and Spinner components are rendered together
+ * with real context providers (AuthProvider, CartProvider, SearchProvider) and
+ * real React-Router (MemoryRouter).
+ *
+ * The ONLY boundaries mocked are:
+ *   - axios   – to stub network calls made by useCategory (Header) and page
+ *               data-loading hooks, without hitting a real server.
+ *   - matchMedia – jsdom does not implement it; antd Badge (used by Header)
+ *               reads it at mount time.
+ *
+ * Layout, Header, Footer, and Spinner are intentionally NOT mocked so that
+ * every test exercises the real shell integration.
+ *
+ * Jinhan Wu, A0266075Y
+ */
+
+import React from "react";
+import { render, screen, waitFor, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
+import "@testing-library/jest-dom";
+import axios from "axios";
+
+import { AuthProvider } from "../../context/auth";
+import { CartProvider } from "../../context/cart";
+import { SearchProvider } from "../../context/search";
+
+import HomePage from "../../pages/HomePage";
+import About from "../../pages/About";
+import Pagenotfound from "../../pages/Pagenotfound";
+import PrivateRoute from "../../components/Routes/Private";
+import Dashboard from "../../pages/user/Dashboard";
+
+// ── External-boundary mocks ──────────────────────────────────────────────────
+
+jest.mock("axios");
+
+// jsdom does not implement matchMedia; antd Badge reads it at mount time.
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Renders a set of <Route> elements inside the full provider/router stack that
+ * mirrors the real application (see client/src/index.js).
+ */
+function renderApp(initialRoute, routeElements) {
+  return render(
+    <MemoryRouter initialEntries={[initialRoute]}>
+      <AuthProvider>
+        <SearchProvider>
+          <CartProvider>
+            <Routes>{routeElements}</Routes>
+          </CartProvider>
+        </SearchProvider>
+      </AuthProvider>
+    </MemoryRouter>
+  );
+}
+
+/**
+ * Stubs every axios.get call the shell and its pages may fire so tests never
+ * hit a real server.  Each handler returns the minimal shape the consumer
+ * expects so that components render without crashing.
+ */
+function stubAxios() {
+  axios.get.mockImplementation((url) => {
+    // useCategory hook (called by Header on every page)
+    if (url === "/api/v1/category/get-category") {
+      return Promise.resolve({ data: { success: true, category: [] } });
+    }
+    // HomePage: paginated product list
+    if (url.startsWith("/api/v1/product/product-list")) {
+      return Promise.resolve({ data: { products: [] } });
+    }
+    // HomePage: total product count (drives the "Load more" button)
+    if (url === "/api/v1/product/product-count") {
+      return Promise.resolve({ data: { total: 0 } });
+    }
+    // PrivateRoute: server-side JWT check
+    if (url === "/api/v1/auth/user-auth") {
+      return Promise.resolve({ data: { ok: false } });
+    }
+    return Promise.resolve({ data: {} });
+  });
+}
+
+// ── Test suite ────────────────────────────────────────────────────────────────
+
+describe("App shell integration: Layout wraps Header + Footer around every route", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    localStorage.clear();
+    stubAxios();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  // ── Test 1 ────────────────────────────────────────────────────────────────
+  //
+  // Verifies that Header and Footer are present on the Home page AND survive
+  // a client-side navigation to the About page — i.e. the shell persists
+  // across route changes because every page component re-uses <Layout>.
+  //
+  test("Test 1: Header and Footer persist while navigating from Home to About via Footer link", async () => {
+    // Arrange: render the app starting at the home route
+    renderApp("/", [
+      <Route key="home" path="/" element={<HomePage />} />,
+      <Route key="about" path="/about" element={<About />} />,
+      <Route key="404" path="*" element={<Pagenotfound />} />,
+    ]);
+
+    // Assert: Header brand link is rendered (real Header component)
+    await waitFor(() => {
+      expect(
+        screen.getByRole("link", { name: /Virtual Vault/i })
+      ).toBeInTheDocument();
+    });
+
+    // Assert: Header navigation links are present
+    expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Register" })).toBeInTheDocument();
+
+    // Assert: Footer copyright and nav links are rendered (real Footer component)
+    expect(screen.getByText(/All Rights Reserved/)).toBeInTheDocument();
+    expect(screen.getByText(/TestingComp/)).toBeInTheDocument();
+    const footerAboutLink = screen.getAllByRole("link", { name: "About" })[0];
+    expect(footerAboutLink).toBeInTheDocument();
+
+    // Assert: Home page content is visible (confirms correct initial route)
+    expect(screen.getByText("All Products")).toBeInTheDocument();
+
+    // Act: navigate to About using the Footer "About" link
+    await act(async () => {
+      userEvent.click(footerAboutLink);
+    });
+
+    // Assert: About page content is now visible
+    await waitFor(() => {
+      expect(screen.getByText("Add text")).toBeInTheDocument();
+    });
+
+    // Assert: Header is still rendered after navigation (shell persists)
+    expect(
+      screen.getByRole("link", { name: /Virtual Vault/i })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+
+    // Assert: Footer is still rendered after navigation (shell persists)
+    expect(screen.getByText(/All Rights Reserved/)).toBeInTheDocument();
+    expect(screen.getByText(/TestingComp/)).toBeInTheDocument();
+  });
+
+  // ── Test 2 ────────────────────────────────────────────────────────────────
+  //
+  // Verifies that the 404 / Pagenotfound page is served inside the same app
+  // shell — Header and Footer remain intact even for unknown routes, because
+  // Pagenotfound itself calls <Layout>.
+  //
+  test("Test 2: 404 page renders inside app shell with Header and Footer intact", async () => {
+    // Arrange: navigate directly to a route that has no matching <Route>
+    renderApp("/this-route-does-not-exist-xyz", [
+      <Route key="home" path="/" element={<HomePage />} />,
+      <Route key="about" path="/about" element={<About />} />,
+      <Route key="404" path="*" element={<Pagenotfound />} />,
+    ]);
+
+    // Assert: 404 page-specific content is shown (real Pagenotfound component)
+    await waitFor(() => {
+      expect(screen.getByText("404")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Oops ! Page Not Found")).toBeInTheDocument();
+
+    // Assert: "Go Back" link points to home
+    const goBackLink = screen.getByRole("link", { name: "Go Back" });
+    expect(goBackLink).toBeInTheDocument();
+    expect(goBackLink).toHaveAttribute("href", "/");
+
+    // Assert: Header shell is intact around the 404 content
+    expect(
+      screen.getByRole("link", { name: /Virtual Vault/i })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
+
+    // Assert: Footer shell is intact around the 404 content
+    expect(screen.getByText(/All Rights Reserved/)).toBeInTheDocument();
+    expect(screen.getByText(/TestingComp/)).toBeInTheDocument();
+  });
+
+  // ── Test 3 ────────────────────────────────────────────────────────────────
+  //
+  // Verifies the Spinner's role in the auth-guard flow:
+  //   1. PrivateRoute detects no auth token → renders Spinner immediately.
+  //   2. Spinner counts down (faked with jest timers).
+  //   3. After 3 seconds Spinner navigates to "/" (PrivateRoute passes path="").
+  //   4. The resulting Home page is still wrapped by Layout with Header + Footer.
+  //
+  test("Test 3: Spinner appears for unauthenticated protected route then redirects to Home inside the shell", async () => {
+    // Arrange: no auth token in localStorage (fresh context = unauthenticated)
+    jest.useFakeTimers();
+
+    renderApp("/dashboard/user", [
+      <Route key="home" path="/" element={<HomePage />} />,
+      <Route key="dashboard" path="/dashboard" element={<PrivateRoute />}>
+        <Route key="user" path="user" element={<Dashboard />} />
+      </Route>,
+      <Route key="404" path="*" element={<Pagenotfound />} />,
+    ]);
+
+    // Assert: Spinner renders immediately — PrivateRoute saw no token
+    // Spinner renders outside Layout so Header/Footer are not expected here
+    expect(
+      screen.getByText(/redirecting to you in/i)
+    ).toBeInTheDocument();
+    expect(screen.getByText(/3 second/)).toBeInTheDocument();
+    expect(document.querySelector(".spinner-border")).toBeInTheDocument();
+
+    // Assert: Dashboard content is NOT visible (PrivateRoute blocked it)
+    expect(screen.queryByText("All Products")).not.toBeInTheDocument();
+
+    // Act: advance fake timers one second at a time, flushing React state
+    // between each tick so the Spinner's count state updates correctly.
+    for (let tick = 0; tick < 3; tick++) {
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
+    }
+
+    // Assert: Spinner has navigated to "/" — Home page content now visible
+    await waitFor(() => {
+      expect(screen.getByText("All Products")).toBeInTheDocument();
+    });
+
+    // Assert: spinner countdown text is gone
+    expect(
+      screen.queryByText(/redirecting to you in/i)
+    ).not.toBeInTheDocument();
+
+    // Assert: Header and Footer wrap the redirected Home page (shell intact)
+    expect(
+      screen.getByRole("link", { name: /Virtual Vault/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/All Rights Reserved/)).toBeInTheDocument();
+
+    jest.useRealTimers();
+  });
+});

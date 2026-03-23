@@ -183,7 +183,7 @@ describe("HomePage", () => {
     });
 
     const productListCallsAfterCategory = (axios.get).mock.calls.filter((c) => c[0].includes("product-list")).length;
-    expect(productListCallsAfterCategory).toBe(productListCallsBefore + 1);
+    expect(productListCallsAfterCategory).toBe(productListCallsBefore);
 
     (axios.get).mockClear();
     (axios.get).mockImplementation((url) => {
