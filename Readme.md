@@ -47,25 +47,25 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - `controllers/productController.js` (createProductController, updateProductController, deleteProductController)
 
 #### Wu Jinhan: Protected Routes, Admin View Users, General, Home
-- context/auth.js 
-- helpers/authHelper.js
-- middlewares/authMiddleware.js
-- pages/admin/Users.js
-- components/Footer.js
-- components/Header.js
-- components/Layout.js
-- components/Spinner.js
-- pages/About.js
-- pages/Pagenotfound.js
-- config/db.js
-- pages/Homepage.js
+- `context/auth.js`
+- `helpers/authHelper.js`
+- `middlewares/authMiddleware.js`
+- `pages/admin/Users.js`
+- `components/Footer.js`
+- `components/Header.js`
+- `components/Layout.js`
+- `components/Spinner.js`
+- `pages/About.js`
+- `pages/Pagenotfound.js`
+- `config/db.js`
+- `pages/Homepage.js`
 
 ### MS1 CI URL
 [CI Running on Github](https://github.com/cs4218/cs4218-2520-ecom-project-cs4218-2520-team09/actions/runs/22284240505/job/64459688020)
 
 ### MS2
 
-#### Tan Wei Zhi
+#### Tan Wei Zhi: Profile and Admin Dashboard
 
 #### Zhu Shiqi: Integration and UI Tests for Registration, Login, Search, User Dashboard
 - `tests/integration/search.integration.test.js`
@@ -91,6 +91,18 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - `tests/ui/admin-category.spec.js`
 - `tests/ui/admin-orders.spec.js`
 - `tests/ui/admin-products.spec.js`
+
+#### Wu Jinhan
+
+### MS3
+
+#### Tan Wei Zhi 
+
+#### Zhu Shiqi: Load Testing
+
+#### Chan Cheuk Hong John: Spike Testing
+
+#### Liu Yiwei: Soak Testing
 
 #### Wu Jinhan
 
