@@ -1,0 +1,140 @@
+/**
+ * k6 Load Test — GET /api/v1/product/get-product
+ *
+ * Simulates real-world user traffic. Measures response times, throughput, and error rate
+ * under expected concurrent user load.
+ *
+ */
+
+import http from "k6/http";
+import { check, sleep } from "k6";
+import { Counter, Rate, Trend } from "k6/metrics";
+
+const BASE_URL = "http://localhost:6060";
+const ENDPOINT = `${BASE_URL}/api/v1/product/get-product`;
+
+/** Total number of failed requests (non-2xx) */
+const errorCount = new Counter("product_api_errors");
+
+/** Proportion of requests that failed — used for the error-rate threshold */
+const errorRate = new Rate("product_api_error_rate");
+
+/** Per-request response latency for this endpoint */
+const responseLatency = new Trend("product_api_latency", true);
+
+/** Number of products returned per response — tracks throughput consistency */
+const productsPerResponse = new Trend("products_per_response");
+
+// ---------------------------------------------------------------------------
+// Load profile
+//
+// Mirrors a typical e-commerce busy-hour pattern:
+//   • Warm-up   : traffic gradually builds as users start browsing (1 min, 0→10 VUs)
+//   • Ramp-up   : traffic rises to the expected peak load         (2 min, 10→50 VUs)
+//   • Sustained : system held at peak to measure steady-state     (3 min, 50 VUs)
+//   • Ramp-down : traffic tapers off at end of peak hour          (1 min, 50→0 VUs)
+//
+// 50 concurrent users is a realistic daytime peak for a mid-size store
+// ---------------------------------------------------------------------------
+
+export const options = {
+  stages: [
+    { duration: "1m", target: 10 }, // warm-up
+    { duration: "2m", target: 50 }, // ramp-up to expected peak
+    { duration: "3m", target: 50 }, // sustained peak load
+    { duration: "1m", target: 0  }, // ramp-down
+  ],
+
+  thresholds: {
+    // 95 % of requests must complete within 500 ms
+    http_req_duration: ["p(95)<500"],
+
+    // 99 % of requests must complete within 1 s
+    product_api_latency: ["p(99)<1000"],
+
+    // Error rate must stay below 1 %
+    product_api_error_rate: ["rate<0.01"],
+
+    // At least 99 % of all response checks must pass
+    checks: ["rate>0.99"],
+  },
+};
+
+export default function () {
+  const res = http.get(ENDPOINT, {
+    headers: { Accept: "application/json" },
+    tags: { name: "get_product" },
+  });
+
+  // ---- record custom metrics ----
+  responseLatency.add(res.timings.duration);
+  const failed = res.status >= 400;
+  errorRate.add(failed);
+  if (failed) errorCount.add(1);
+
+  // ---- HTTP-level checks ----
+  check(res, {
+    "status is 200":        (r) => r.status === 200,
+    "response time < 500ms": (r) => r.timings.duration < 500,
+    "content-type is JSON": (r) =>
+      (r.headers["Content-Type"] || "").includes("application/json"),
+  });
+
+  // ---- Response body checks ----
+  if (res.status === 200) {
+    let body;
+    try {
+      body = res.json();
+    } catch (_) {
+      check(null, { "body is valid JSON": () => false });
+      sleep(1 + Math.random() * 2);
+      return;
+    }
+
+    check(body, {
+      "success flag is true":       (b) => b.success === true,
+      "products field is an array": (b) => Array.isArray(b.products),
+      "countTotal is a number":     (b) => typeof b.countTotal === "number",
+      "returns at most 12 products":(b) => b.products.length <= 12,
+      "returns at least 1 product": (b) => b.products.length >= 1,
+    });
+
+    if (Array.isArray(body.products)) {
+      productsPerResponse.add(body.products.length);
+
+      if (body.products.length > 0) {
+        const p = body.products[0];
+        check(p, {
+          "product has _id":             () => p._id !== undefined,
+          "product has name":            () => typeof p.name === "string",
+          "product has price":           () => typeof p.price === "number",
+          "product has category object": () => p.category !== null && typeof p.category === "object",
+          "product photo is excluded":   () => p.photo === undefined,
+        });
+      }
+    }
+  }
+
+  // Think-time: realistic pause between page loads (1–3 s)
+  sleep(1 + Math.random() * 2);
+}
+
+export function setup() {
+  const res = http.get(ENDPOINT);
+  if (res.status !== 200) {
+    throw new Error(
+      `Preflight failed — expected HTTP 200, got ${res.status}. `
+    );
+  }
+
+  let productCount = 0;
+  try { productCount = res.json().countTotal || 0; } catch (_) {}
+
+  console.log(`Target : ${ENDPOINT}`);
+  console.log(`Preflight OK — ${productCount} products in catalogue`);
+  return { productCount };
+}
+
+export function teardown(data) {
+  console.log(`Load test complete. Catalogue size: ${data.productCount} products.`);
+}
