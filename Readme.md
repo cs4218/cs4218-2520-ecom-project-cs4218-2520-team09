@@ -65,7 +65,11 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 
 ### MS2
 
-#### Tan Wei Zhi
+#### Tan Wei Zhi: Profile and Admin Dashboard
+- `tests/integration/AdminDashBoard.integration.test.js`
+- `tests/integration/Profile.integration.test.js`
+- `tests/ui/profile.spec.js`
+- `tests/ui/admin-dashboard.spec.js`
 
 #### Zhu Shiqi: Integration and UI Tests for Registration, Login, Search, User Dashboard
 - `tests/integration/search.integration.test.js`
