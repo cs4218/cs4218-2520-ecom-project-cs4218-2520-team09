@@ -110,7 +110,7 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 
 #### Zhu Shiqi: Load Testing
 
-#### Chan Cheuk Hong John: Spike Testing
+#### Chan Cheuk Hong John: Security Testing
 
 #### Liu Yiwei: Stress Testing
 
