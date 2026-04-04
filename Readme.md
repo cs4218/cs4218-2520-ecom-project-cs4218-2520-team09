@@ -104,6 +104,18 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 - `client/src/tests/integration/appShell.integration.test.js`
 - `client/src/tests/integration/HomePage.integration.test.js`
 
+### MS3
+
+#### Tan Wei Zhi: Volume Testing
+
+#### Zhu Shiqi: Load Testing
+
+#### Chan Cheuk Hong John: Security Testing
+
+#### Liu Yiwei: Stress Testing
+
+#### Wu Jinhan: Soak Testing
+
 ## 3. Website Features
 
 - **User Authentication**: Secure user authentication system implemented to manage user accounts and sessions.
