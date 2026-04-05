@@ -63,31 +63,36 @@ export const registerController = async (req, res) => {
 };
 
 //POST LOGIN
+// Chan Cheuk Hong John, A0253435H
+// Fix error status code and made error messages common to prevent information leakage
 export const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     //validation
     if (!email || !password) {
-      return res.status(404).send({
+      return res.status(400).send({
         success: false,
         message: "Invalid email or password",
       });
     }
     //check user
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email: { $eq: email } });
+    
     if (!user) {
-      return res.status(404).send({
+      return res.status(401).send({
         success: false,
-        message: "Email is not registered",
+        message: "Invalid email or password",
       });
     }
+
     const match = await comparePassword(password, user.password);
     if (!match) {
-      return res.status(200).send({
+      return res.status(401).send({
         success: false,
-        message: "Invalid Password",
+        message: "Invalid email or password",
       });
     }
+
     //token
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
