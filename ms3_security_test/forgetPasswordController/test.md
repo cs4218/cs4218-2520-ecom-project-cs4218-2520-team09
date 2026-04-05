@@ -1,5 +1,7 @@
 # Secrity Testing for forgetPasswordController
 
+#### Note: Since the frontend for forgetPasswordController was not implemented, the API could only be directly accessed through CLI and not through the frontend.
+
 ## Test 1 - Logic Flaw
 This vulnerability was discovered through a scan from an online tool [Semgrep](https://semgrep.dev/).
 ![Semgrep scan results](forget_semgrep.png)
