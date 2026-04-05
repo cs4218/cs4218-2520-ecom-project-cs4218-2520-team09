@@ -45,3 +45,9 @@ From the scan, we can see that authController.js, specifically the loginControll
 
 ### Fix
 Following the suggestion by Aikido, the fix is applied to treat the user input as a literal value, instead of previously reading user input as a query object which could bypass authentication.
+
+## Test 4 - Bypass frontend validation with Burp Suite
+When attempting to login from the normal login page, there are regex checks for email. <br>
+However, this can be bypassed by intercepting and modifying the packets with Burp Suite. <br> <br>
+
+While this could bypass the regex check, the NoSQL injection vulnerability has been previously tested and fixed, rendering this not a vulnerability as it can not be further exploited. If https is enabled, the packet would also be un-readable as TLS would encrypt the packets. 
