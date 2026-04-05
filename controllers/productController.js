@@ -382,16 +382,55 @@ export const brainTreeTokenController = async (req, res) => {
 };
 
 //payment
+// Chan Cheuk Hong John, A0253435H
+// changed to calculate total price here instead of relying on client side cart prices
 export const brainTreePaymentController = async (req, res) => {
   try {
     const { nonce, cart } = req.body;
+
+    // Calculate total price from cart items
     let total = 0;
-    cart.map((i) => {
-      total += i.price;
-    });
+
+    const productIds = cart.map(item => item._id);
+    const products = await productModel.find({ _id: { $in: productIds } });
+
+    for (let item of cart) {
+        const product = products.find(p => p._id.toString() === item._id);
+
+        // Store value for later use
+        if (product.originalQuantity === undefined) {
+            product.originalQuantity = product.quantity;
+        }
+
+        if (!product) return res.status(400).send({ message: `Invalid product ID: ${item._id}` });
+
+        // Send warning on console, but transaction still proceed with correct price
+        if (Number(item.price) !== product.price) {
+            console.error(
+              `Price mismatch detected for product ${product.name} (${product._id}): ` +
+              `Client sent ${item.price}, actual price is ${product.price}`
+            );
+            // return res.status(400).send({ message: "Price mismatch detected" });
+        }
+
+        // Prevent buying out of stock items
+        if (product.quantity <= 0) {
+            return res.status(400).send({ message: `Product ${product.name} is out of stock, ${product.originalQuantity} left.` });
+        }
+
+        product.quantity -= 1;
+        total += product.price;
+    }
+
+    // Update product quantity 
+    for (let item of cart) {
+        const product = products.find(p => p._id.toString() === item._id);
+        await product.save();
+    }
+
     let newTransaction = gateway.transaction.sale(
       {
-        amount: total,
+        amount: total.toFixed(2),
         paymentMethodNonce: nonce,
         options: {
           submitForSettlement: true,

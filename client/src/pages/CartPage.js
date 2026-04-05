@@ -59,6 +59,8 @@ const CartPage = () => {
   }, [auth?.token]);
 
   //handle payments
+  // Chan Cheuk Hong John, A0253435H
+  // Add error handling for product quantity issues
   const handlePayment = async () => {
     try {
       setLoading(true);
@@ -75,6 +77,7 @@ const CartPage = () => {
     } catch (error) {
       console.log(error);
       setLoading(false);
+      toast.error(error.response.data.message);
     }
   };
   return (
