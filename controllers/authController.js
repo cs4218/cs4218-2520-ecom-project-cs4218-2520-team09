@@ -116,21 +116,24 @@ export const loginController = async (req, res) => {
 };
 
 //forgotPasswordController
-
+// Chan Cheuk Hong John, A0253435H
+// Fix logic flaws
 export const forgotPasswordController = async (req, res) => {
   try {
     const { email, answer, newPassword } = req.body;
     if (!email) {
-      res.status(400).send({ message: "Email is required" });
+        return res.status(400).send({ message: "Email is required" });
     }
     if (!answer) {
-      res.status(400).send({ message: "answer is required" });
+        return res.status(400).send({ message: "answer is required" });
     }
     if (!newPassword) {
-      res.status(400).send({ message: "New Password is required" });
+        return res.status(400).send({ message: "New Password is required" });
     }
-    //check
-    const user = await userModel.findOne({ email, answer });
+
+    //check, fixed to prevent NoSQL injection
+    const user = await userModel.findOne({ email: { $eq: email }, answer: { $eq: answer } });    
+    
     //validation
     if (!user) {
       return res.status(404).send({
