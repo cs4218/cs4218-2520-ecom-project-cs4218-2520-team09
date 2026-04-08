@@ -6,6 +6,7 @@ const SearchInput = () => {
   const [values, setValues] = useSearch();
   const navigate = useNavigate();
 
+  // Chan Cheuk Hong John, A0253435H
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
