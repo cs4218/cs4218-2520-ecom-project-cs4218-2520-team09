@@ -21,7 +21,7 @@ export const loginRateLimiter = (req, res, next) => {
   
   const now = Date.now();
   const windowMs = 15 * 60 * 1000; // 15 minutes
-  const maxAttempts = 20;
+  const maxAttempts = 100; // Temp variable
 
   // Get or create attempt record
   let attempts = loginAttempts.get(identifier);
