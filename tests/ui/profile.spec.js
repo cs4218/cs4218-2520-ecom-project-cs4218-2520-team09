@@ -19,20 +19,24 @@ async function seedProfileUser() {
     }
 
     await mongoose.connect(process.env.MONGO_URL);
-    const hashed = await hashPassword(USER_PASSWORD);
-    await userModel.findOneAndUpdate(
-        { email: USER_EMAIL },
-        {
-            name: USER_NAME,
-            email: USER_EMAIL,
-            password: hashed,
-            phone: USER_PHONE,
-            address: USER_ADDRESS,
-            answer: "Soccer",
-            role: 0,
-        },
-        { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    try {
+        const hashed = await hashPassword(USER_PASSWORD);
+        await userModel.findOneAndUpdate(
+            { email: USER_EMAIL },
+            {
+                name: USER_NAME,
+                email: USER_EMAIL,
+                password: hashed,
+                phone: USER_PHONE,
+                address: USER_ADDRESS,
+                answer: "Soccer",
+                role: 0,
+            },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+    } finally {
+        await mongoose.disconnect();
+    }
 }
 
 async function loginAsUser(page) {
@@ -46,10 +50,6 @@ async function loginAsUser(page) {
 test.describe("Profile Page E2E", () => {
     test.beforeAll(async () => {
         await seedProfileUser();
-    });
-
-    test.afterAll(async () => {
-        await mongoose.disconnect();
     });
 
     test("login then profile page shows form pre-populated with user data", async ({ page }) => {
