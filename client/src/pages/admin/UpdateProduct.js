@@ -91,7 +91,7 @@ const UpdateProduct = () => {
   //delete a product
   const handleDelete = async () => {
     try {
-            let answer = window.confirm("Are You Sure want to delete this product ? ");
+            let answer = window.confirm("Are you sure you want to delete this product ? ");
       if (!answer) return;
       const { data } = await axios.delete(
         `/api/v1/product/delete-product/${id}`
