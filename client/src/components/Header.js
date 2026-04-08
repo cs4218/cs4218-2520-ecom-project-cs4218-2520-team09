@@ -17,6 +17,10 @@ const Header = () => {
       user: null,
       token: "",
     });
+    // Chan Cheuk Hong John, A0253435H
+    // Clear Local Storage on Logout to prevent persistence across sessions
+    localStorage.removeItem("__paypal_storage__");
+    localStorage.removeItem("cart");
     localStorage.removeItem("auth");
     toast.success("Logout Successfully");
   };
