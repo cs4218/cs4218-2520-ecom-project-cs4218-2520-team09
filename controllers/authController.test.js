@@ -242,7 +242,7 @@ describe('loginController', () => {
 
     await loginController(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
       message: 'Invalid email or password',
@@ -259,11 +259,11 @@ describe('loginController', () => {
 
     await loginController(req, res);
 
-    expect(userModel.findOne).toHaveBeenCalledWith({ email: 'test@example.com' });
-    expect(res.status).toHaveBeenCalledWith(404);
+    expect(userModel.findOne).toHaveBeenCalledWith({ email: {"$eq": 'test@example.com' }});
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
-      message: 'Email is not registered',
+      message: 'Invalid email or password',
     });
   });
 
@@ -285,10 +285,10 @@ describe('loginController', () => {
     await loginController(req, res);
 
     expect(comparePassword).toHaveBeenCalledWith('wrongpassword', 'hashedPassword');
-    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.send).toHaveBeenCalledWith({
       success: false,
-      message: 'Invalid Password',
+      message: 'Invalid email or password',
     });
   });
 
@@ -319,7 +319,7 @@ describe('loginController', () => {
     expect(JWT.sign).toHaveBeenCalledWith(
       { _id: mockUser._id },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '15m' }
     );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith({
