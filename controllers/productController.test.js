@@ -105,7 +105,7 @@ describe("Test for Admin View Products Features", () => {
     });
 
     test("should create product successfully with photo", async () => {
-      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1, shipping: true };
       req.files = { photo: { size: 1000, path: "/path", type: "img/jpg" } };
       const mockSave = jest.fn().mockResolvedValue(true);
       productModel.mockImplementation(() => ({ photo: {}, save: mockSave }));
@@ -117,7 +117,7 @@ describe("Test for Admin View Products Features", () => {
     });
 
     test("should create product successfully without photo", async () => {
-      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1, shipping: true };
       req.files = {};
       const mockSave = jest.fn().mockResolvedValue(true);
       productModel.mockImplementation(() => ({ save: mockSave }));
@@ -129,7 +129,7 @@ describe("Test for Admin View Products Features", () => {
     });
 
     test("should cover catch block on error", async () => {
-      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1, shipping: true };
       productModel.mockImplementation(() => ({ save: jest.fn().mockRejectedValue(new Error("DB Error")) }));
       await createProductController(req, res);
       expect(res.status).toHaveBeenCalledWith(500);
@@ -183,8 +183,8 @@ describe("Test for Admin View Products Features", () => {
 
     test("should update successfully with photo", async () => {
       req.params.pid = "123";
-      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
-      req.files = { photo: { size: 1000, path: "/path", type: "img" } };
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1, shipping: true  };
+      req.files = { photo: { size: 1000, path: "/path", type: "img/jpg" } };
 
       const mockProduct = { photo: {}, save: jest.fn().mockResolvedValue(true) };
       productModel.findByIdAndUpdate = jest.fn().mockResolvedValue(mockProduct);
@@ -197,7 +197,7 @@ describe("Test for Admin View Products Features", () => {
 
     test("should update successfully without photo", async () => {
       req.params.pid = "123";
-      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1, shipping: true };
       req.files = {};
 
       const mockProduct = { save: jest.fn().mockResolvedValue(true) };
@@ -211,7 +211,7 @@ describe("Test for Admin View Products Features", () => {
 
     test("should return 404 if product to update not found", async () => {
       req.params.pid = "nonexistent";
-      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1, shipping: true  };
       productModel.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
       
       await updateProductController(req, res);
@@ -219,7 +219,7 @@ describe("Test for Admin View Products Features", () => {
     });
 
     test("should cover catch block", async () => {
-      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1 };
+      req.fields = { name: "N", description: "D", price: 1, category: "C", quantity: 1, shipping: true  };
       productModel.findByIdAndUpdate = jest.fn().mockRejectedValue(new Error());
       await updateProductController(req, res);
       expect(res.status).toHaveBeenCalledWith(500);

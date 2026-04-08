@@ -52,7 +52,7 @@ export const createProductController = async (req, res) => {
         return res.status(400).send({ error: "Please enter a valid quantity" });
     }
 
-    const allowedFiles = ["image/jpeg", "image/png"];
+    const allowedFiles = ["image/jpeg", "image/png", "image/jpg", "img/jpeg", "img/png", "img/jpg"];
     if (photo && !allowedFiles.includes(photo.type)) {
         console.log(photo.type);
         return res.status(400).send({ error: "Please upload a valid image (jpeg, png)" });
@@ -222,7 +222,7 @@ export const updateProductController = async (req, res) => {
         return res.status(400).send({ error: "Please enter a valid quantity" });
     }
 
-    const allowedFiles = ["image/jpeg", "image/png"];
+    const allowedFiles = ["image/jpeg", "image/png", "image/jpg", "img/jpeg", "img/png", "img/jpg"];
     if (photo && !allowedFiles.includes(photo.type)) {
         console.log(photo.type);
         return res.status(400).send({ error: "Please upload a valid image (jpeg, png)" });
