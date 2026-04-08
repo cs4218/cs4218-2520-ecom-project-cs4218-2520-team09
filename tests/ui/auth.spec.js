@@ -93,7 +93,7 @@ test("login with wrong password shows Invalid Password error", async ({
   await page.locator("#exampleInputPassword1").fill("wrongpassword");
   await page.getByRole("button", { name: "LOGIN" }).click();
 
-  await expect(page.getByText("Invalid Password")).toBeVisible({ timeout: 5000 });
+  await expect(page.getByText("Invalid email or password")).toBeVisible({ timeout: 5000 });
   await expect(page).toHaveURL(/\/login/);
 });
 
@@ -106,7 +106,7 @@ test("login with unregistered email shows Something went wrong error", async ({
   await page.locator("#exampleInputPassword1").fill("somepassword");
   await page.getByRole("button", { name: "LOGIN" }).click();
 
-  await expect(page.getByText("Something went wrong")).toBeVisible({ timeout: 5000 });
+  await expect(page.getByText("Invalid email or password")).toBeVisible({ timeout: 5000 });
   await expect(page).toHaveURL(/\/login/);
 });
 
