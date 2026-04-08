@@ -429,8 +429,8 @@ describe('forgotPasswordController', () => {
     await forgotPasswordController(req, res);
 
     expect(userModel.findOne).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      answer: 'Wrong Answer',
+      email: {"$eq": 'test@example.com'},
+      answer: {"$eq": 'Wrong Answer'},
     });
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.send).toHaveBeenCalledWith({
