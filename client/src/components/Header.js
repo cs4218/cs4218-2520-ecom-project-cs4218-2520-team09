@@ -21,6 +21,7 @@ const Header = () => {
     // Clear Local Storage on Logout to prevent persistence across sessions
     localStorage.removeItem("__paypal_storage__");
     localStorage.removeItem("cart");
+    cart = [];
     localStorage.removeItem("auth");
     toast.success("Logout Successfully");
   };
