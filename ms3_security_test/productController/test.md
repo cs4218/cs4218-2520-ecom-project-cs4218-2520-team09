@@ -1,4 +1,4 @@
-# Secrity Testing for productController (create, delete, update product)
+# Security Testing for productController (create, delete, update product)
 
 ## Test 1 - Stored XSS test
 Input fields with \<script\> tags, and see if the application is vulnerable to stored XSS. <br>
