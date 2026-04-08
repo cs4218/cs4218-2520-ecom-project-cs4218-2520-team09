@@ -51,3 +51,11 @@ When attempting to login from the normal login page, there are regex checks for 
 However, this can be bypassed by intercepting and modifying the packets with Burp Suite. <br> <br>
 
 While this could bypass the regex check, the NoSQL injection vulnerability has been previously tested and fixed, rendering this not a vulnerability as it can not be further exploited. If https is enabled, the packet would also be un-readable as TLS would encrypt the packets. 
+
+## Test 5 - Login bypass with LocalStorage
+Currently, there are no defensive measures taken on the use of the auth JWT tokens. This makes it vulnerable to replay attacks, where attack can obtain another user's JWT token and reuse it to disguise as that user instead.
+
+### Fix
+Change JWT's expiry to 15min (instead of 7days).
+A better fix would be to bind JWT tokens to session or device ID, but this would require an overhaul of many implementations and tests, and thus not implemented.
+Else, https can be enabled to prevent stealing of JWT token.
