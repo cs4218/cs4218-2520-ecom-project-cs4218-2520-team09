@@ -439,8 +439,12 @@ describe('CartPage', () => {
         axios.get.mockResolvedValue({ data: { clientToken: "Client Token" } });
 
         // Mock handlePayment to fail
-        axios.post.mockRejectedValueOnce(new Error('Payment failed'));        
-    
+        axios.post.mockRejectedValueOnce({
+            response: {
+              data: { message: 'Payment failed' }
+            }
+        });
+            
         render(
             <MemoryRouter>
                 <CartPage />
