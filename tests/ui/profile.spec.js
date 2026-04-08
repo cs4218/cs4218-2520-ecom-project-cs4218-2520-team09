@@ -50,7 +50,7 @@ test.describe("Profile Page E2E", () => {
 
     test.afterAll(async () => {
         await mongoose.disconnect();
-    }
+    });
 
     test("login then profile page shows form pre-populated with user data", async ({ page }) => {
         await loginAsUser(page);
