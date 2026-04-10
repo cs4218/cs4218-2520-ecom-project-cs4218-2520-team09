@@ -17,8 +17,10 @@
     "test:integration:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.frontend.config.js --testPathPattern='client/src/tests/integration/'",
     "test:integration:all": "npm run test:integration && npm run test:integration:frontend",
     "test:ui": "playwright test tests/ui/",
-    "test:all": "jest --coverage"
-},
+    "test:all": "jest --coverage",
+    "audit:tests": "node agents/test-auditor.js",
+    "audit:tests:report": "node agents/test-auditor.js --output=test-health-report.md"
+  },
   "keywords": [],
   "author": "RP",
   "license": "ISC",
