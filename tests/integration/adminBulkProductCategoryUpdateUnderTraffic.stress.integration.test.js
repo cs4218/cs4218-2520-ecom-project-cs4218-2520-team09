@@ -8,7 +8,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import categoryModel from "../../models/categoryModel.js";
 import productModel from "../../models/productModel.js";
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import { setTimeout as sleep } from "timers/promises";
 
 // Liu, Yiwei, A0332922J
 describe("Stress Test: Admin Bulk Product/Category Update Under Traffic", () => {
@@ -163,11 +163,11 @@ describe("Stress Test: Admin Bulk Product/Category Update Under Traffic", () => 
       (res) => (res.body?.latencyMs || 0) > 600
     );
 
-    // Admin writes that took longer than the base hold time indicate real write serialization
+    // Admin writes that exceed the 700ms base hold time indicate real write serialization
     // overhead from concurrent updateMany calls competing on the same collection.
     const adminSuccesses = adminResponses.filter((res) => res.status === 200);
     const slowAdminWrites = adminResponses.filter(
-      (res) => (res.body?.latencyMs || 0) > 600
+      (res) => (res.body?.latencyMs || 0) > 750
     );
 
     console.log("User /products status counts:", userStatusCounts);
@@ -184,7 +184,8 @@ describe("Stress Test: Admin Bulk Product/Category Update Under Traffic", () => 
     // Admin bulk writes must complete despite concurrent read pressure (system resilience).
     expect(adminSuccesses.length).toBeGreaterThan(0);
 
-    // Concurrent updateMany calls on the same collection must produce elevated write latency.
+    // Concurrent updateMany calls on the same collection must produce overhead beyond the
+    // 700ms base hold time, confirming real write serialization at the storage engine level.
     expect(slowAdminWrites.length).toBeGreaterThan(0);
   }, 120000);
 });

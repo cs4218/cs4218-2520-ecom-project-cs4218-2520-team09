@@ -8,7 +8,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import productModel from "../../models/productModel.js";
 import categoryModel from "../../models/categoryModel.js";
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import { setTimeout as wait } from "timers/promises";
 
 // Liu, Yiwei, A0332922J
 describe("Stress Test: Product Search and Catalog Read Saturation", () => {

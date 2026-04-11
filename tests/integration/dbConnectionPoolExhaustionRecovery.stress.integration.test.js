@@ -8,7 +8,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import categoryModel from "../../models/categoryModel.js";
 import productModel from "../../models/productModel.js";
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import { setTimeout as delay } from "timers/promises";
 
 // Liu, Yiwei, A0332922J
 describe("Stress Test: Database Connection Pool Exhaustion and Recovery", () => {
