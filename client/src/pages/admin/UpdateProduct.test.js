@@ -176,7 +176,7 @@ describe("UpdateProduct Component Tests", () => {
             fireEvent.click(updateBtn);
         });
 
-        expect(toast.error).toHaveBeenCalledWith("something went wrong");
+        expect(toast.error).toHaveBeenCalledWith("Something went wrong");
     });
 
     test("Given user confirms delete, When delete button clicked, Then it calls delete API", async () => {

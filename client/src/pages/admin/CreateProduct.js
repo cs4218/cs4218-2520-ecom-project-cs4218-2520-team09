@@ -36,34 +36,34 @@ const CreateProduct = () => {
   }, []);
 
   //create product function
+  // Chan Cheuk Hong John, A0253435H
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const productData = new FormData();
-      productData.append("name", name);
-      productData.append("description", description);
-      productData.append("price", price);
-      productData.append("quantity", quantity);
-      productData.append("photo", photo);
-      productData.append("category", category);
-            productData.append("shipping", shipping);
+        const productData = new FormData();
+        productData.append("name", name);
+        productData.append("description", description);
+        productData.append("price", price);
+        productData.append("quantity", quantity);
+        productData.append("photo", photo);
+        productData.append("category", category);
+        productData.append("shipping", shipping);
       
-            const { data } = await axios.post(
-        "/api/v1/product/create-product",
-        productData
-      );
-      
-            if (data?.success) {
-        toast.success("Product Created Successfully");
-        navigate("/dashboard/admin/products");
-      } else {
-        toast.error(data?.message);
-      }
-    } catch (error) {
-      console.log(error);
-            toast.error("Something went wrong");
-    }
-  };
+        const { data } = await axios.post(
+            "/api/v1/product/create-product",
+            productData
+        );      
+        if (data?.success) {
+            toast.success("Product Created Successfully");
+            navigate("/dashboard/admin/products");
+        } else {
+            toast.error(data?.message);
+        } 
+        } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.error || "Something went wrong");
+        }   
+    };
 
   return (
     <Layout title={"Dashboard - Create Product"}>

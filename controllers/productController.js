@@ -17,27 +17,45 @@ var gateway = new braintree.BraintreeGateway({
   privateKey: process.env.BRAINTREE_PRIVATE_KEY,
 });
 
+// Chan Cheuk Hong John, A0253435H
 export const createProductController = async (req, res) => {
   try {
     const { name, description, price, category, quantity, shipping } =
-      req.fields;
+        req.fields;
     const { photo } = req.files;
-        //validation
+
+    //validation
     switch (true) {
-      case !name:
-        return res.status(400).send({ error: "Name is Required" });
-      case !description:
-        return res.status(400).send({ error: "Description is Required" });
-      case !price:
-        return res.status(400).send({ error: "Price is Required" });
-      case !category:
-        return res.status(400).send({ error: "Category is Required" });
-      case !quantity:
-        return res.status(400).send({ error: "Quantity is Required" });
-      case photo && photo.size > 1000000:
-        return res
-          .status(400)
-          .send({ error: "photo is Required and should be less than 1mb" });
+        case !name:
+           return res.status(400).send({ error: "Name is Required" });
+        case !description:
+            return res.status(400).send({ error: "Description is Required" });
+        case !price:
+            return res.status(400).send({ error: "Price is Required" });
+        case !category:
+            return res.status(400).send({ error: "Category is Required" });
+        case !quantity:
+            return res.status(400).send({ error: "Quantity is Required" });
+        case !shipping:
+            return res.status(400).send({ error: "Shipping is Required" });
+        case photo && photo.size > 1000000:
+            return res
+            .status(400)
+            .send({ error: "Photo is Required and should be less than 1mb" });
+    }
+
+    if (price <= 0 || price > Number.MAX_SAFE_INTEGER) {
+        return res.status(400).send({ error: "Please enter a valid price" });
+    }
+
+    if (quantity <= 0 || quantity > Number.MAX_SAFE_INTEGER) {
+        return res.status(400).send({ error: "Please enter a valid quantity" });
+    }
+
+    const allowedFiles = ["image/jpeg", "image/png", "image/jpg", "img/jpeg", "img/png", "img/jpg"];
+    if (photo && !allowedFiles.includes(photo.type)) {
+        console.log(photo.type);
+        return res.status(400).send({ error: "Please upload a valid image (jpeg, png)" });
     }
 
     const products = new productModel({ ...req.fields, slug: slugify(name) });
@@ -144,7 +162,7 @@ export const productPhotoController = async (req, res) => {
   }
 };
 
-//delete controller
+// Delete controller
 export const deleteProductController = async (req, res) => {
   try {
         const product = await productModel.findByIdAndDelete(req.params.pid).select("-photo");
@@ -168,30 +186,48 @@ export const deleteProductController = async (req, res) => {
   }
 };
 
-//update products
+// Update products
+// Chan Cheuk Hong John, A0253435H
 export const updateProductController = async (req, res) => {
   try {
     const { name, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
-        //validation
+
+    //validation
     switch (true) {
-      case !name:
-        return res.status(400).send({ error: "Name is Required" });
-      case !description:
-        return res.status(400).send({ error: "Description is Required" });
-      case !price:
-        return res.status(400).send({ error: "Price is Required" });
-      case !category:
-        return res.status(400).send({ error: "Category is Required" });
-      case !quantity:
-        return res.status(400).send({ error: "Quantity is Required" });
-      case photo && photo.size > 1000000:
-        return res
-          .status(400)
-          .send({ error: "photo is Required and should be less than 1mb" });
+        case !name:
+            return res.status(400).send({ error: "Name is Required" });
+        case !description:
+            return res.status(400).send({ error: "Description is Required" });
+        case !price:
+            return res.status(400).send({ error: "Price is Required" });
+        case !category:
+            return res.status(400).send({ error: "Category is Required" });
+        case !quantity:
+            return res.status(400).send({ error: "Quantity is Required" });
+        case !shipping:
+            return res.status(400).send({ error: "Shipping is Required" });
+        case photo && photo.size > 1000000:
+            return res
+            .status(400)
+            .send({ error: "Photo is Required and should be less than 1mb" });
     }
 
+    if (price <= 0 || price > Number.MAX_SAFE_INTEGER) {
+        return res.status(400).send({ error: "Please enter a valid price" });
+    }
+
+    if (quantity <= 0 || quantity > Number.MAX_SAFE_INTEGER) {
+        return res.status(400).send({ error: "Please enter a valid quantity" });
+    }
+
+    const allowedFiles = ["image/jpeg", "image/png", "image/jpg", "img/jpeg", "img/png", "img/jpg"];
+    if (photo && !allowedFiles.includes(photo.type)) {
+        console.log(photo.type);
+        return res.status(400).send({ error: "Please upload a valid image (jpeg, png)" });
+    }
+    
     const products = await productModel.findByIdAndUpdate(
       req.params.pid,
       { ...req.fields, slug: slugify(name) },

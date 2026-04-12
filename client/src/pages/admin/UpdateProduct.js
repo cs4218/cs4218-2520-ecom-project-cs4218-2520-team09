@@ -30,7 +30,6 @@ const UpdateProduct = () => {
       setId(data.product._id);
       setDescription(data.product.description);
       setPrice(data.product.price);
-            // removed duplicate setPrice(data.product.price);
       setQuantity(data.product.quantity);
       setShipping(data.product.shipping);
       setCategory(data.product.category._id);
@@ -60,36 +59,39 @@ const UpdateProduct = () => {
   }, []);
 
   //create product function
+  // Chan Cheuk Hong John, A0253435H
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const productData = new FormData();
-      productData.append("name", name);
-      productData.append("description", description);
-      productData.append("price", price);
-      productData.append("quantity", quantity);
-      photo && productData.append("photo", photo);
-      productData.append("category", category);
-            const { data } = await axios.put(
-        `/api/v1/product/update-product/${id}`,
-        productData
-      );
-            if (data?.success) {
-        toast.success("Product Updated Successfully");
-        navigate("/dashboard/admin/products");
-      } else {
-        toast.error(data?.message);
-      }
+        const productData = new FormData();
+        productData.append("name", name);
+        productData.append("description", description);
+        productData.append("price", price);
+        productData.append("quantity", quantity);
+        productData.append("photo", photo);
+        productData.append("category", category);
+        productData.append("shipping", shipping);
+      
+        const { data } = await axios.put(
+            `/api/v1/product/update-product/${id}`,
+            productData
+        );
+        if (data?.success) {
+            toast.success("Product Updated Successfully");
+            navigate("/dashboard/admin/products");
+        } else {
+            toast.error(data?.message);
+        } 
     } catch (error) {
-      console.log(error);
-      toast.error("something went wrong");
+        console.log(error);
+        toast.error(error.response?.data?.error || "Something went wrong");
     }
   };
 
   //delete a product
   const handleDelete = async () => {
     try {
-            let answer = window.confirm("Are You Sure want to delete this product ? ");
+            let answer = window.confirm("Are you sure you want to delete this product ? ");
       if (!answer) return;
       const { data } = await axios.delete(
         `/api/v1/product/delete-product/${id}`
