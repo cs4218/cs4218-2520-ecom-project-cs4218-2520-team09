@@ -10,6 +10,7 @@ import {
   orderStatusController,
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
+import { loginRateLimiter } from "../middlewares/rateLimiter.js";
 
 //router object
 const router = express.Router();
@@ -19,7 +20,9 @@ const router = express.Router();
 router.post("/register", registerController);
 
 //LOGIN || POST
-router.post("/login", loginController);
+// Chan Cheuk Hong John, A0253435H
+// Modify to use emailRateLimiter middleware
+router.post("/login", loginRateLimiter, loginController);
 
 //Forgot Password || POST
 router.post("/forgot-password", forgotPasswordController);

@@ -37,9 +37,9 @@ describe("loginController integration with real comparePassword", () => {
 
     await loginController(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.send).toHaveBeenCalledWith(
-      expect.objectContaining({ success: false, message: "Invalid Password" })
+      expect.objectContaining({ success: false, message: "Invalid email or password" })
     );
   });
 
@@ -96,16 +96,16 @@ describe("loginController integration with real comparePassword", () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it("returns 404 for unregistered email", async () => {
+  it("returns 401 for unregistered email", async () => {
     userModel.findOne = jest.fn().mockResolvedValue(null);
 
     req.body = { email: "unknown@example.com", password: "somePassword" };
 
     await loginController(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.send).toHaveBeenCalledWith(
-      expect.objectContaining({ success: false, message: "Email is not registered" })
+      expect.objectContaining({ success: false, message: "Invalid email or password" })
     );
   });
 
@@ -113,12 +113,12 @@ describe("loginController integration with real comparePassword", () => {
     [{ password: "pass" }, "missing email"],
     [{ email: "a@b.com" }, "missing password"],
     [{}, "missing both"],
-  ])("returns 404 for missing credentials (%s)", async (body) => {
+  ])("returns 401 for missing credentials (%s)", async (body) => {
     req.body = body;
 
     await loginController(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.status).toHaveBeenCalledWith(401);
     expect(res.send).toHaveBeenCalledWith(
       expect.objectContaining({ success: false, message: "Invalid email or password" })
     );

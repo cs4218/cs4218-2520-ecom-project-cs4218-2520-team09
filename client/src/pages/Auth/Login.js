@@ -20,32 +20,43 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/login", {
-        email,
-        password,
-      });
-      if (res && res.data.success) {
-        toast.success(res.data && res.data.message, {
-            duration: 5000,
-            icon: "🙏",
-            style: {
-              background: "green",
-              color: "white",
-            },
-          });
-        setAuth({
-            ...auth,
-            user: res.data.user,
-            token: res.data.token,
+        // let deviceId = localStorage.getItem("deviceId");
+
+        // if (!deviceId) {
+        //   deviceId = crypto.randomUUID();
+        //   localStorage.setItem("deviceId", deviceId);
+        // }
+
+        // axios.defaults.headers.common["x-device-id"] = deviceId;
+
+        const res = await axios.post("/api/v1/auth/login", {
+            email,
+            password,
+            // deviceId,
         });
-        localStorage.setItem("auth", JSON.stringify(res.data));
-        navigate(location.state || "/");
-      } else {
-        toast.error(res.data.message);
-      }
+
+        if (res && res.data.success) {
+            toast.success(res.data && res.data.message, {
+                duration: 5000,
+                icon: "🙏",
+                style: {
+                background: "green",
+                color: "white",
+                },
+            });
+            setAuth({
+                ...auth,
+                user: res.data.user,
+                token: res.data.token,
+            });
+            localStorage.setItem("auth", JSON.stringify(res.data));
+            navigate(location.state || "/");
+        } else {
+            toast.error(res.data.message);
+        }
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
   return (
