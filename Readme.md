@@ -111,8 +111,35 @@ AI Declaration: Generative AI was used for task testing and report rephrasing.
 #### Tan Wei Zhi: Volume Testing
 
 #### Zhu Shiqi: Load Testing
+- `tests/load/checkout.k6.js`
+- `tests/load/get-product.k6.js`
+- `tests/load/login.k6.js`
+- `tests/load/orders.k6.js`
+- `tests/load/search-product.k6.js`
 
 #### Chan Cheuk Hong John: Security Testing
+The respective writeups can be found in ms3_security_test/*/test.md
+
+1. Login
+    - middleware/rateLimiter.js
+    - controllers/authController.js
+
+2. CartPage
+    - controllers/productController.js (brainTreePaymentController)
+    - client/src/components/Header.js
+    - client/src/pages/CartPage.js
+
+3. productController (create, update, delete product)
+    - routes/productRoutes.js
+    - client/src/pages/admin/CreateProduct.js
+    - client/src/pages/admin/UpdateProduct.js
+    - controllers/productController.js
+
+4. authController (forget password)
+    - controllers/authController.js (forgetPasswordController)
+
+5. searchInput
+    - client/src/components/Form/SearchInput.js
 
 #### Liu Yiwei: Stress Testing
 - `tests/integration/addToCartCheckout.stress.integration.test.js`
