@@ -6,11 +6,12 @@ const SearchInput = () => {
   const [values, setValues] = useSearch();
   const navigate = useNavigate();
 
+  // Chan Cheuk Hong John, A0253435H
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.get(
-        `/api/v1/product/search/${values.keyword}`
+        `/api/v1/product/search/${encodeURIComponent(values.keyword)}`
       );
       setValues({ ...values, results: data });
       navigate("/search");
