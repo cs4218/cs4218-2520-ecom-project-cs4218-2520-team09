@@ -9,7 +9,7 @@ import { Badge } from "antd";
 import "../styles/Header.css";
 const Header = () => {
   const [auth, setAuth] = useAuth();
-  const [cart] = useCart();
+  const [cart, setCart] = useCart();
   const categories = useCategory();
   const handleLogout = () => {
     setAuth({
@@ -17,6 +17,11 @@ const Header = () => {
       user: null,
       token: "",
     });
+    // Chan Cheuk Hong John, A0253435H
+    // Clear Local Storage on Logout to prevent persistence across sessions
+    localStorage.removeItem("__paypal_storage__");
+    localStorage.removeItem("cart");
+    setCart([]);    
     localStorage.removeItem("auth");
     toast.success("Logout Successfully");
   };
