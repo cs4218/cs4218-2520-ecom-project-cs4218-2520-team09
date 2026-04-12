@@ -4,6 +4,8 @@
 
 Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-commerce website, offering seamless connectivity and user-friendly features. The platform provides a robust framework for online shopping. The website is designed to adapt to evolving business needs and can be efficiently extended.
 
+AI Declaration: Generative AI was used for task testing and report rephrasing.
+
 ## 2. Submission Details
 
 ### Project Workload:
@@ -113,6 +115,11 @@ Virtual Vault is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) e-co
 #### Chan Cheuk Hong John: Security Testing
 
 #### Liu Yiwei: Stress Testing
+- `tests/integration/addToCartCheckout.stress.integration.test.js`
+- `tests/integration/loginSessionStorm.stress.integration.test.js`
+- `tests/integration/productSearchCatalogReadSaturation.stress.integration.test.js`
+- `tests/integration/dbConnectionPoolExhaustionRecovery.stress.integration.test.js`
+- `tests/integration/adminBulkProductCategoryUpdateUnderTraffic.stress.integration.test.js`
 
 #### Wu Jinhan: Soak Testing
 
